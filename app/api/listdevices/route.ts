@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
       const convertedAuthKey = convAuthKey(apiKeyFromHeader || "")
       if (!body.authkey || body.authkey !== convertedAuthKey) {
         return NextResponse.json(
-          { success: false, error: "Unauthorized: Invalid Authentication Key (authkey)" },
+          { success: false, error: "Unauthorized: Invalid Authentication Key (authkey) " + body.authkey + " | " + convertedAuthKey },
           { status: 401 }
         )
       }
