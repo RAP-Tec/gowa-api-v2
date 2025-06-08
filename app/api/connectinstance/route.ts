@@ -37,15 +37,15 @@ export async function POST(request: NextRequest) {
       }
     } else {
     // 4. Se não tiver env.AUTH_KEY então converte a chave de autenticação do header apiKeyFromHeader, invertendo a API_KEY e passando para minúsculas, e adicionando traços a cada 8 caracteres
-      const convertedAuthKey = convAuthKey(apiKeyFromHeader)
+    /*  const convertedAuthKey = convAuthKey(apiKeyFromHeader)
       if (!body.authkey || body.authkey !== convertedAuthKey) {
         return NextResponse.json(
           { success: false, error: "Unauthorized: Invalid Authentication Key (authkey)" },
           { status: 401 }
         )
-      }
+      } */
     }
-    
+
     // Validar instanceName
     if (!body.instanceName) {
       return NextResponse.json(
