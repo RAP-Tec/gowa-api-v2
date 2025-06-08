@@ -7,11 +7,16 @@
  * @param input String de entrada para conversão
  * @returns String convertida
  */
-export function convAuthKey(input: string): string { 
-  const reversed = input.split('').reverse().join(''); 
-  const lowerCase = reversed.toLowerCase(); 
-  const withDashes = lowerCase.match(/.{1,8}/g)?.join('-') || lowerCase; 
-  return withDashes; 
+export function convAuthKey(input: string): string {
+  // 1. Remove todos os hífens da string de entrada
+  const withoutDashes = input.replace(/-/g, '');
+  // 2. Reverte a string
+  const reversed = withoutDashes.split('').reverse().join('');
+  // 3. Converte para minúsculas
+  const lowerCase = reversed.toLowerCase();
+  // 4. Adiciona hífens a cada 8 caracteres
+  const withDashes = lowerCase.match(/.{1,8}/g)?.join('-') || lowerCase;
+  return withDashes;
 }
 
 // Outras funções relacionadas à autenticação podem ser adicionadas aqui
