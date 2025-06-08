@@ -10,7 +10,7 @@ const GOWA_API_KEY = process.env.GOWA_API_KEY || ""
 export async function POST(request: NextRequest) {
   try {
     // 1. Validar API Key do Header
-    const apiKeyFromHeader = request.headers.get('apikey')
+    const apiKeyFromHeader = request.headers.get('apikey') || ""
     if (!apiKeyFromHeader || apiKeyFromHeader === "") {
       return NextResponse.json(
         { success: false, error: "API Key not provided (apikey)" },
@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       )
     }
     // 2. Validar se a GOWA_API_KEY está definida no ambiente
-    if (!GOWA_API_KEY) {
+    if (GOWA_API_KEY != "") {
       if (apiKeyFromHeader !== GOWA_API_KEY) {
         return NextResponse.json(
           { success: false, error: "Unauthorized: Invalid Global API Key (apikey)" },
@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
     const body = await request.json()
     // 3. Validar Auth Key do Body se está definida no ambiente
-    if (!AUTH_KEY) {
+    if (AUTH_KEY != "") {
       if (!body.authkey || body.authkey !== AUTH_KEY) {
         return NextResponse.json(
           { success: false, error: "Unauthorized: Invalid Global Authentication Key (AUTHKEY)" },
@@ -37,7 +37,7 @@ export async function POST(request: NextRequest) {
       }
     } else {
     // 4. Se não tiver env.AUTH_KEY então converte a chave de autenticação do header apiKeyFromHeader, invertendo a API_KEY e passando para minúsculas, e adicionando traços a cada 8 caracteres
-      const convertedAuthKey = convAuthKey(apiKeyFromHeader || "")
+      const convertedAuthKey = convAuthKey(apiKeyFromHeader)
       if (!body.authkey || body.authkey !== convertedAuthKey) {
         return NextResponse.json(
           { success: false, error: "Unauthorized: Invalid Authentication Key (authkey)" },
@@ -45,6 +45,7 @@ export async function POST(request: NextRequest) {
         )
       }
     }
+    
     // Validar instanceName
     if (!body.instanceName) {
       return NextResponse.json(

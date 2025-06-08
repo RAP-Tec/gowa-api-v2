@@ -10,7 +10,7 @@ const GOWA_API_KEY = process.env.GOWA_API_KEY || ""
 export async function POST(request: NextRequest) {
   try {
     // 1. Validar API Key do Header
-    const apiKeyFromHeader = request.headers.get('apikey')
+    const apiKeyFromHeader = request.headers.get('apikey') || ""
     if (!apiKeyFromHeader || apiKeyFromHeader === "") {
       return NextResponse.json(
         { success: false, error: "API Key not provided (apikey)" },
@@ -37,10 +37,10 @@ export async function POST(request: NextRequest) {
       }
     } else {
     // 4. Se não tiver env.AUTH_KEY então converte a chave de autenticação do header apiKeyFromHeader, invertendo a API_KEY e passando para minúsculas, e adicionando traços a cada 8 caracteres
-      const convertedAuthKey = convAuthKey(apiKeyFromHeader || "")
+      const convertedAuthKey = convAuthKey(apiKeyFromHeader)
       if (!body.authkey || body.authkey !== convertedAuthKey) {
         return NextResponse.json(
-          { success: false, error: "Unauthorized: Invalid Authentication Key (authkey) " + body.authkey + " | " + convertedAuthKey },
+          { success: false, error: "Unauthorized: Invalid Authentication Key (authkey)" },
           { status: 401 }
         )
       }
