@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
     }
     const body = await request.json()
     // 3. Validar Auth Key do Body se está definida no ambiente
-    if (!AUTH_KEY) {
+    if (AUTH_KEY != "") {
       if (!body.authkey || body.authkey !== AUTH_KEY) {
         return NextResponse.json(
           { success: false, error: "Unauthorized: Invalid Global Authentication Key (AUTHKEY)" },
