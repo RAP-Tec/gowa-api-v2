@@ -18,7 +18,7 @@ export async function POST(request: NextRequest) {
       )
     }
     // 2. Validar se a GOWA_API_KEY está definida no ambiente
-    if (!GOWA_API_KEY) {
+    if (GOWA_API_KEY != "") {
       if (apiKeyFromHeader !== GOWA_API_KEY) {
         return NextResponse.json(
           { success: false, error: "Unauthorized: Invalid Global API Key (apikey)" },
