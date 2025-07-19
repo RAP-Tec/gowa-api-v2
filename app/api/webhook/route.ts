@@ -15,6 +15,17 @@ export async function GET(request: NextRequest) {
   if (mode === 'subscribe' && token === verifyToken) {
     console.log('WEBHOOK VERIFIED')
     return new NextResponse(challenge, { status: 200 })
+  } else if (!mode) {
+    // Se não for uma requisição de verificação, retornar informações da plataforma
+    return NextResponse.json(
+      {
+        status: 200,
+        message: "Gowa Plataforma Webhook API",
+        version: "2.3.5",
+        clientName: "gowa_plataforma_api",
+      },
+      { status: 200 }
+    )
   } else {
     return new NextResponse(null, { status: 403 })
   }
