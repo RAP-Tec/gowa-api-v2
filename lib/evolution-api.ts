@@ -137,7 +137,25 @@ export const evolutionApi = {
   },
 
   // Criar instância
-  async createInstance(instanceName: string, number?: string, apiKey?: string): Promise<ApiResponse> {
+  async createInstance(
+    apiKey?: string,
+    instanceName: string, 
+    number?: string, 
+    options?: {
+      rejectCall?: boolean,
+      msgCall?: string,
+      groupsIgnore?: boolean,
+      alwaysOnline?: boolean,
+      readMessages?: boolean,
+      readStatus?: boolean,
+      syncFullHistory?: boolean,
+      proxyHost?: string,
+      proxyPort?: string,
+      proxyProtocol?: string,
+      proxyUsername?: string,
+      proxyPassword?: string
+    }
+  ): Promise<ApiResponse> {
     try {
       // Verificar se a instância já existe pelo nome
       const existsByName = await this.instanceExists(instanceName, apiKey)
@@ -159,13 +177,26 @@ export const evolutionApi = {
         }
       }
   
-      // Payload mínimo com apenas os campos essenciais
+      // Payload com campos essenciais e opcionais
       const payload = {
         instanceName,
         name: instanceName, // Adicionando campo name como backup
         integration: "WHATSAPP-BAILEYS", // Campo obrigatório
         qrcode: true,
         ...(number && { number }),
+        // Adicionar campos opcionais se fornecidos
+        ...(options?.rejectCall !== undefined && { rejectCall: options.rejectCall }),
+        ...(options?.msgCall !== undefined && { msgCall: options.msgCall }),
+        ...(options?.groupsIgnore !== undefined && { groupsIgnore: options.groupsIgnore }),
+        ...(options?.alwaysOnline !== undefined && { alwaysOnline: options.alwaysOnline }),
+        ...(options?.readMessages !== undefined && { readMessages: options.readMessages }),
+        ...(options?.readStatus !== undefined && { readStatus: options.readStatus }),
+        ...(options?.syncFullHistory !== undefined && { syncFullHistory: options.syncFullHistory }),
+        ...(options?.proxyHost && { proxyHost: options.proxyHost }),
+        ...(options?.proxyPort && { proxyPort: options.proxyPort }),
+        ...(options?.proxyProtocol && { proxyProtocol: options.proxyProtocol }),
+        ...(options?.proxyUsername && { proxyUsername: options.proxyUsername }),
+        ...(options?.proxyPassword && { proxyPassword: options.proxyPassword }),
       }
   
 //      console.log("Payload para criação de instância:", JSON.stringify(payload))
@@ -199,7 +230,7 @@ export const evolutionApi = {
       return {
         success: true,
         message: "Device Instance created successfully",
-        version: '2.2.4.4',
+        version: '2.3.5',
         steps: "Send the QR Code or Pairing Code to the customer and ask them to read it within 30 seconds",
         data: {
           instanceName: response.instance.instanceName,

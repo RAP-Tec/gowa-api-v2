@@ -65,8 +65,24 @@ export async function POST(request: NextRequest) {
 
     // Se ambas as chaves e instanceName são válidos, prosseguir
 //    console.log("Autenticação bem-sucedida. Criando instância...")
+    // Extrair campos opcionais do body
+    const options = {
+      rejectCall: body.rejectCall,
+      msgCall: body.msgCall,
+      groupsIgnore: body.groupsIgnore,
+      alwaysOnline: body.alwaysOnline,
+      readMessages: body.readMessages,
+      readStatus: body.readStatus,
+      syncFullHistory: body.syncFullHistory,
+      proxyHost: body.proxyHost,
+      proxyPort: body.proxyPort,
+      proxyProtocol: body.proxyProtocol,
+      proxyUsername: body.proxyUsername,
+      proxyPassword: body.proxyPassword
+    }
+    
     // Call the Evolution API to create a new instance
-    const result = await evolutionApi.createInstance(body.instanceName, body.number)
+    const result = await evolutionApi.createInstance(body.instanceName, body.number, options)
 
     if (result.success && result.data) { // Verificação adicional para result.data
       // Get QR code for the newly created instance
