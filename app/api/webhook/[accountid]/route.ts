@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server"
 const verifyToken = process.env.VERIFY_TOKEN || ""
 
 // Rota para requisições GET (verificação do webhook)
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, { params }: { params: { accountid: string } }) {
   // Extrair parâmetros da query
   const searchParams = request.nextUrl.searchParams
   const mode = searchParams.get('hub.mode')
@@ -13,7 +13,7 @@ export async function GET(request: NextRequest) {
 
   // Verificar se os parâmetros correspondem ao esperado
   if (mode === 'subscribe' && token === verifyToken) {
-    console.log('WEBHOOK VERIFIED')
+    console.log(`WEBHOOK VERIFIED FOR ACCOUNT ${params.accountid}`)
     return new NextResponse(challenge, { status: 200 })
   } else if (!mode) {
     // Se não for uma requisição de verificação, retornar informações da plataforma
@@ -23,6 +23,7 @@ export async function GET(request: NextRequest) {
         message: "Gowa Plataforma Webhook API",
         version: "2.3.5",
         clientName: "gowa_plataforma_api",
+        accountId: params.accountid
       },
       { status: 200 }
     )
@@ -32,16 +33,17 @@ export async function GET(request: NextRequest) {
 }
 
 // Rota para requisições POST (recebimento de eventos)
-export async function POST(request: NextRequest) {
+export async function POST(request: NextRequest, { params }: { params: { accountid: string } }) {
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
-  console.log(`\n\nWebhook received ${timestamp}\n`)
+  console.log(`\n\nWebhook received for account ${params.accountid} at ${timestamp}\n`)
   
   // Obter o corpo da requisição
   const body = await request.json()
-  // console.log(JSON.stringify(body, null, 2))
 
-  // Enviar o mesmo conteúdo para a URL definida em CHAT_SEND_POST_URL
-  const chatSendPostUrl = process.env.CHAT_SEND_POST_URL || ""
+  // Enviar o mesmo conteúdo para a URL dinâmica do Chatwoot
+  const CHAT_API_URL = process.env.CHAT_API_URL || "https://app.gowa.com.br/api/v1"
+  const chatSendPostUrl = `${CHAT_API_URL}/accounts/${params.accountid}/conversations`
+
   if (chatSendPostUrl) {
     try {
       // Enviar de forma assíncrona sem esperar resposta
@@ -59,7 +61,7 @@ export async function POST(request: NextRequest) {
     }
   }
   
-  // Enviar o mesmo conteúdo para a URL definida em SEND_POST_URL
+  // Enviar o mesmo conteúdo para a URL definida em SEND_POST_URL (mantido para compatibilidade)
   const sendPostUrl = process.env.SEND_POST_URL || ""
   if (sendPostUrl) {
     try {
@@ -87,7 +89,7 @@ export async function OPTIONS() {
   return new NextResponse(null, {
     status: 204,
     headers: {
-      "Access-Control-Allow-Origin": "*", // Ajuste conforme sua política de CORS
+      "Access-Control-Allow-Origin": "*",
       "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
       "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey",
     },
