@@ -20,7 +20,7 @@ export default function LoginPage() {
     const data = await res.json();
     if (data.success) {
       localStorage.setItem("gowa_auth", JSON.stringify({ user, apiKey }));
-      router.push("/settings");
+      router.push("/manager");
     } else {
       setError("Invalid Login");
     }
