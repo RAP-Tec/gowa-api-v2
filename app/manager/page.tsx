@@ -9,6 +9,15 @@ import { Button } from "@/components/ui/button"
 import React from "react"
 
 export default function ManagerPage() {
+  // Buscar GOWA_API_KEY do ambiente (Next.js expõe apenas variáveis prefixadas com NEXT_PUBLIC_ no client)
+  const [hasApiKey, setHasApiKey] = useState<boolean>(false);
+  useEffect(() => {
+    fetch("/api/env")
+      .then(res => res.json())
+      .then(env => {
+        setHasApiKey(!!env.apiKey && env.apiKey !== "");
+      });
+  }, []);
   const router = useRouter();
   const [hooks, setHooks] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -201,7 +210,7 @@ export default function ManagerPage() {
   <div className="mb-8">
     <hr></hr>
   </div>
-      <InstanceManager />
+      {hasApiKey && <InstanceManager />}
     </div>
   );
 }
