@@ -69,10 +69,10 @@ export default function InstanceManager() {
   useEffect(() => {
     fetchInstances()
 
-    // Configurar intervalo para atualizar a cada 30 segundos
+    // Configurar intervalo para atualizar a cada 44 segundos
     const interval = setInterval(() => {
       fetchInstances()
-    }, 30000)
+    }, 44000)
 
     setRefreshInterval(interval)
 

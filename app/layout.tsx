@@ -8,8 +8,8 @@ const inter = Inter({ subsets: ["latin"] })
 
 
 export const metadata: Metadata = {
-  title: "Gowa API",
-  description: "Gerenciamento de instâncias da Gowa API",
+  title: "Gowa Platform",
+  description: "GOWA - Soluções completas para WhatsApp",
   generator: 'gowa-api',
   icons: {
     icon: "/favicon.png"
