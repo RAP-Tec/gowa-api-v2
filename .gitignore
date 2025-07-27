@@ -29,6 +29,9 @@ yarn-error.log*
 .env.*
 !.env.example
 
+# data file
+data.json
+
 # vercel
 .vercel
 
