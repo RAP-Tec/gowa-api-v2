@@ -1,0 +1,18 @@
+{
+  "12345": {
+    "verify_token": "token_verificacao_123",
+    "chat_api_url": "https://api.chat.com/12345",
+    "chat_api_key": "chave_api_123",
+    "send_post_url_1": "https://webhook1.com/12345",
+    "send_post_url_2": "https://webhook2.com/12345",
+    "send_post_url_3": "https://webhook3.com/12345"
+  },
+  "67890": {
+    "verify_token": "token_verificacao_678",
+    "chat_api_url": "https://api.chat.com/67890",
+    "chat_api_key": "chave_api_678",
+    "send_post_url_1": "https://webhook1.com/67890",
+    "send_post_url_2": "https://webhook2.com/67890",
+    "send_post_url_3": "https://webhook3.com/67890"
+  }
+}
