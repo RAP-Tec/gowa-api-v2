@@ -182,7 +182,9 @@ export default function SettingsPage() {
           </table>
         </div>
       </div>
-<hr></hr>
+  <div className="mb-8">
+    <hr></hr>
+  </div>
       <InstanceManager />
     </div>
   );
