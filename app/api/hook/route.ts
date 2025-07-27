@@ -28,7 +28,20 @@ export async function POST(request: NextRequest) {
     if (!body.id || typeof body.id !== "string") {
       return NextResponse.json({ error: "ID inválido" }, { status: 400 });
     }
-    json[body.id] = body;
+    if (!body.verify_token || typeof body.verify_token !== "string") {
+      return NextResponse.json({ error: "Token de verificação (verify_token) é obrigatório" }, { status: 400 });
+    }
+    // Preencher campos opcionais com string vazia se não informados
+    const newHook = {
+      id: body.id,
+      verify_token: body.verify_token,
+      chat_api_url: body.chat_api_url || "",
+      chat_api_key: body.chat_api_key || "",
+      send_post_url_1: body.send_post_url_1 || "",
+      send_post_url_2: body.send_post_url_2 || "",
+      send_post_url_3: body.send_post_url_3 || ""
+    };
+    json[body.id] = newHook;
     await fs.writeFile(DATA_PATH, JSON.stringify(json, null, 2));
     return NextResponse.json({ success: true, data: json[body.id] });
   } catch (error) {
