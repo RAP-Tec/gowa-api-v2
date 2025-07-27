@@ -143,7 +143,7 @@ export default function ManagerPage() {
           </div>
           <div>
             <Label>Chat API URL</Label>
-            <Input name="chat_api_url" value={form.chat_api_url} onChange={handleChange} />
+            <Input name="chat_api_url" type="url" value={form.chat_api_url} onChange={handleChange} />
           </div>
           <div>
             <Label>Chat API Key</Label>
@@ -151,15 +151,15 @@ export default function ManagerPage() {
           </div>
           <div>
             <Label>Send Post URL 1</Label>
-            <Input name="send_post_url_1" value={form.send_post_url_1} onChange={handleChange} />
+            <Input name="send_post_url_1" type="url" value={form.send_post_url_1} onChange={handleChange} />
           </div>
           <div>
             <Label>Send Post URL 2</Label>
-            <Input name="send_post_url_2" value={form.send_post_url_2} onChange={handleChange} />
+            <Input name="send_post_url_2" type="url" value={form.send_post_url_2} onChange={handleChange} />
           </div>
           <div>
             <Label>Send Post URL 3</Label>
-            <Input name="send_post_url_3" value={form.send_post_url_3} onChange={handleChange} />
+            <Input name="send_post_url_3" type="url" value={form.send_post_url_3} onChange={handleChange} />
           </div>
           <div className="flex items-end">
             <Button type="submit" className="w-full">{editingId ? "Salvar" : "Adicionar"}</Button>
