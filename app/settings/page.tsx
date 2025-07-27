@@ -182,7 +182,7 @@ export default function SettingsPage() {
           </table>
         </div>
       </div>
-
+<hr></hr>
       <InstanceManager />
     </div>
   );
