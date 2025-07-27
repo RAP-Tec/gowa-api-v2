@@ -118,7 +118,7 @@ export default function ManagerPage() {
         Logoff
       </button>
 
-      <h1 className="text-2xl font-bold mb-6">Gowa Platform | Devices and Hooks Dashboard</h1>
+      <h1 className="text-2xl font-bold mb-6">Gowa Platform | Hooks and Devices Dashboard</h1>
       <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
       {/* CRUD HOOKS */}
       <div className="mb-8">
