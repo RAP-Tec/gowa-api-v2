@@ -103,6 +103,7 @@ export default function SettingsPage() {
       </button>
 
       <h1 className="text-2xl font-bold mb-6">Gowa Platform | Devices and Hooks Dashboard</h1>
+      <h3 className="text-2xl font-bold mb-6">Webhook URL: <spam id="webhookUrl" name="webhookUrl">https://dsfdsfd.com.br/webhook/2323</spam></h3>
       
       {/* CRUD HOOKS */}
       <div className="mb-8">
@@ -144,8 +145,8 @@ export default function SettingsPage() {
           <table className="min-w-full border text-sm">
             <thead>
               <tr className="bg-gray-100 dark:bg-zinc-800">
-                <th className="border px-2 py-1">ID</th>
-                <th className="border px-2 py-1">Verify Token</th>
+                <th className="border px-2 py-1">Account ID</th>
+                <th className="border px-2 py-1">Token API</th>
                 <th className="border px-2 py-1">Chat API URL</th>
                 <th className="border px-2 py-1">Chat API Key</th>
                 <th className="border px-2 py-1">Send Post URL 1</th>
