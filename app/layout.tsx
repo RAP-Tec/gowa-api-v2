@@ -6,13 +6,15 @@ import { ThemeProvider } from "@/components/theme-provider"
 
 const inter = Inter({ subsets: ["latin"] })
 
+
+export const metadata: Metadata = {
   title: "Gowa API",
   description: "Gerenciamento de instâncias da Gowa API",
   generator: 'gowa-api',
   icons: {
     icon: "/favicon.png"
   }
-}
+};
 
 export default function RootLayout({
   children,
