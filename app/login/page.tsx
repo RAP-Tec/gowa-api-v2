@@ -30,7 +30,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen items-center justify-center bg-gray-100 dark:bg-black">
       <div className="w-full max-w-md p-8 bg-white dark:bg-zinc-900 rounded shadow">
         <div className="flex justify-center mb-6">
-          <Image src="/tealogin.png" alt="Login" width={96} height={96} />
+          <Image src="/gowa.png" alt="Logo" width={479} height={106} />
         </div>
         <h2 className="text-2xl font-bold mb-4 text-center">GOWA</h2>
         <h2 className="text-1xl mb-4 text-center">Plataforma e soluções completas para WhatsApp.</h2>
