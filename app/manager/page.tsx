@@ -1,4 +1,3 @@
-
 "use client";
 
 import InstanceManager from "@/app/components/instance-manager"
@@ -9,7 +8,7 @@ import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import React from "react"
 
-export default function SettingsPage() {
+export default function ManagerPage() {
   const router = useRouter();
   const [hooks, setHooks] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -98,7 +97,6 @@ export default function SettingsPage() {
   if (typeof window !== "undefined") {
     baseUrl = window.location.origin;
   }
-  // Pega o primeiro id da lista de hooks, se houver
   //const firstAccountId = Object.keys(hooks)[0] || "[accountid]";
   //const webhookUrl = `${baseUrl}/api/webhook/${firstAccountId}`;
   const webhookUrl = `${baseUrl}/api/webhook/[accountid]`;
@@ -115,7 +113,6 @@ export default function SettingsPage() {
 
       <h1 className="text-2xl font-bold mb-6">Gowa Platform | Devices and Hooks Dashboard</h1>
       <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
-      
       {/* CRUD HOOKS */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Manage Webhooks</h2>
@@ -201,4 +198,3 @@ export default function SettingsPage() {
     </div>
   );
 }
-

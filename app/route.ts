@@ -7,7 +7,7 @@ export async function GET() {
       message: "Gowa Platform API is running",
       version: "2.3.36",
       clientName: "gowa_plataforma_api",
-      manager: "/settings",
+      manager: "/manager",
       documentation: "https://www.postman.com/rogerioamaral/gowa/overview"
     },
     { status: 200 }
