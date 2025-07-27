@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 
+export default function SettingsPage() {
   const router = useRouter();
   const [hooks, setHooks] = useState<any>({});
   const [loading, setLoading] = useState(true);
@@ -31,6 +32,7 @@ import { Button } from "@/components/ui/button"
       }
     }
     fetchHooks();
+    // eslint-disable-next-line
   }, [router]);
 
   const fetchHooks = async () => {
