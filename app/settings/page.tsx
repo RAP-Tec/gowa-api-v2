@@ -1,7 +1,6 @@
 
 "use client";
 
-
 import InstanceManager from "@/app/components/instance-manager"
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
@@ -104,7 +103,7 @@ export default function SettingsPage() {
       </button>
 
       <h1 className="text-2xl font-bold mb-6">Gowa Platform | Devices and Hooks Dashboard</h1>
-      <hr>
+      
       {/* CRUD HOOKS */}
       <div className="mb-8">
         <h2 className="text-xl font-semibold mb-2">Manage Webhooks</h2>
@@ -183,7 +182,7 @@ export default function SettingsPage() {
           </table>
         </div>
       </div>
-      <hr>
+
       <InstanceManager />
     </div>
   );
