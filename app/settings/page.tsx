@@ -103,11 +103,11 @@ export default function SettingsPage() {
         Logoff
       </button>
 
-      <h1 className="text-2xl font-bold mb-6">Gowa Plataforma | Dashboard Devices</h1>
-
+      <h1 className="text-2xl font-bold mb-6">Gowa Platform | Devices and Hooks Dashboard</h1>
+      <hr>
       {/* CRUD HOOKS */}
       <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-2">Gerenciar Hooks (data.json)</h2>
+        <h2 className="text-xl font-semibold mb-2">Manage Webhooks</h2>
         <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
           <div>
             <Label>ID</Label>
@@ -183,7 +183,7 @@ export default function SettingsPage() {
           </table>
         </div>
       </div>
-
+      <hr>
       <InstanceManager />
     </div>
   );
