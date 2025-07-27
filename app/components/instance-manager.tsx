@@ -43,22 +43,22 @@ export default function InstanceManager() {
     setError(null) // Limpar erros anteriores
 
     try {
-      console.log("Iniciando busca de instâncias...")
+      // console.log("Iniciando busca de instâncias...")
       const response = await listInstances()
 
       if (response.success && response.data) {
-        console.log("Instâncias carregadas com sucesso:", response.data)
+        // console.log("Instâncias carregadas com sucesso:", response.data)
         // Log connection status details for debugging
         response.data.forEach((instance) => {
-          console.log(`Instância ${instance.instanceName}: status = ${instance.status}`)
+          // console.log(`Instância ${instance.instanceName}: status = ${instance.status}`)
         })
         setInstances(response.data)
       } else {
-        console.error("Erro na resposta da API:", response)
+        // console.error("Erro na resposta da API:", response)
         setError(response.error || "Erro desconhecido ao carregar instâncias")
       }
     } catch (err) {
-      console.error("Exceção ao buscar instâncias:", err)
+      // console.error("Exceção ao buscar instâncias:", err)
       setError(`Erro ao conectar com o servidor: ${err instanceof Error ? err.message : JSON.stringify(err)}`)
     } finally {
       setLoading(false)
@@ -102,7 +102,7 @@ export default function InstanceManager() {
         return
       }
 
-      console.log(`Tentando criar instância: ${instanceName}`)
+      // console.log(`Tentando criar instância: ${instanceName}`)
       const response = await createInstance(instanceName, number)
 
       if (response.success) {
@@ -116,7 +116,7 @@ export default function InstanceManager() {
           e.currentTarget.reset()
         }
       } else {
-        console.error("Erro ao criar instância:", response.error)
+        // console.error("Erro ao criar instância:", response.error)
         setError(`Erro ao criar instância: ${response.error}`)
         toast({
           title: "Erro",
@@ -125,7 +125,7 @@ export default function InstanceManager() {
         })
       }
     } catch (err) {
-      console.error("Exceção ao criar instância:", err)
+      // console.error("Exceção ao criar instância:", err)
       setError(`Erro inesperado: ${err instanceof Error ? err.message : JSON.stringify(err)}`)
       toast({
         title: "Erro",
@@ -147,11 +147,11 @@ export default function InstanceManager() {
     setQrDialogOpen(true) // Abrir o modal imediatamente para mostrar o loading
 
     try {
-      console.log(`Solicitando QR Code para instância: ${instanceName}`)
+      // console.log(`Solicitando QR Code para instância: ${instanceName}`)
       const response = await getInstanceQrCode(instanceName)
 
       if (response.success && response.data) {
-        console.log("QR Code obtido com sucesso")
+        // console.log("QR Code obtido com sucesso")
 
         if (response.data.qrcode) {
           // Se temos um QR code base64, usamos ele
@@ -166,7 +166,7 @@ export default function InstanceManager() {
           setPairingCode(response.data.pairingCode)
         }
       } else {
-        console.error("Erro ao obter QR Code:", response.error)
+        // console.error("Erro ao obter QR Code:", response.error)
         setError(`Erro ao obter QR Code: ${response.error}`)
         toast({
           title: "Erro",
@@ -175,7 +175,7 @@ export default function InstanceManager() {
         })
       }
     } catch (err) {
-      console.error("Exceção ao obter QR Code:", err)
+      // console.error("Exceção ao obter QR Code:", err)
       setError(`Erro ao conectar com o servidor: ${err instanceof Error ? err.message : JSON.stringify(err)}`)
       toast({
         title: "Erro",
@@ -211,7 +211,7 @@ export default function InstanceManager() {
         description: "Erro ao conectar com o servidor",
         variant: "destructive",
       })
-      console.error(err)
+      // console.error(err)
     }
   }
 
@@ -223,7 +223,7 @@ export default function InstanceManager() {
     if (window.confirm(`Tem certeza que deseja deletar a instância ${instance.instanceName}?`)) {
       try {
         setDeleting(instance.instanceName)
-        console.log(`Deletando instância com ID: ${idToDelete}`)
+        // console.log(`Deletando instância com ID: ${idToDelete}`)
         const response = await deleteInstance(idToDelete)
 
         if (response.success) {
@@ -235,7 +235,7 @@ export default function InstanceManager() {
         } else {
           // Tentar novamente com o nome da instância se o ID falhou
           if (idToDelete !== instance.instanceName) {
-            console.log(`Tentando deletar usando o nome da instância: ${instance.instanceName}`)
+            // console.log(`Tentando deletar usando o nome da instância: ${instance.instanceName}`)
             const retryResponse = await deleteInstance(instance.instanceName)
 
             if (retryResponse.success) {
@@ -261,7 +261,7 @@ export default function InstanceManager() {
           description: "Erro ao conectar com o servidor",
           variant: "destructive",
         })
-        console.error(err)
+        // console.error(err)
       } finally {
         setDeleting(null)
       }
