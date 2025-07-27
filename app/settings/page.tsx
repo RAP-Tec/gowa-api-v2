@@ -1,6 +1,4 @@
-
 "use client";
-
 import InstanceManager from "@/app/components/instance-manager"
 import { useEffect } from "react"
 import { useRouter } from "next/navigation"
