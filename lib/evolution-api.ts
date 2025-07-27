@@ -46,7 +46,7 @@ async function fetchFromApi<T>(endpoint: string, options: RequestInit = {}, apiK
 
   if (!response.ok) {
     const errorText = await response.text()
-    console.error(`Erro na API (${response.status}):`, errorText)
+    // console.error(`Erro na API (${response.status}):`, errorText)
 
     try {
       const errorJson = JSON.parse(errorText)
@@ -112,7 +112,7 @@ export const evolutionApi = {
         data: instances,
       }
     } catch (error) {
-      console.error("Erro ao listar instâncias:", error)
+      // console.error("Erro ao listar instâncias:", error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -131,7 +131,7 @@ export const evolutionApi = {
 
       return false
     } catch (error) {
-      console.error("Erro ao verificar existência da instância:", error)
+      // console.error("Erro ao verificar existência da instância:", error)
       return false
     }
   },
@@ -223,7 +223,7 @@ export const evolutionApi = {
 
       // Verifica se a resposta contém os dados esperados
       if (!response || !response.instance || !response.instance.instanceId || !response.hash) {
-        console.error("Resposta da API /instance/create inválida:", response);
+        // console.error("Resposta da API /instance/create inválida:", response);
         throw new Error("Invalid API response when creating instance");
       }
 
@@ -243,7 +243,7 @@ export const evolutionApi = {
         }
       }
     } catch (error) {
-      console.error("Erro ao criar instância:", error)
+      // console.error("Erro ao criar instância:", error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -290,7 +290,7 @@ export const evolutionApi = {
         },
       }
     } catch (error) {
-      console.error("Erro ao obter QR Code:", error)
+      // console.error("Erro ao obter QR Code:", error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -322,7 +322,7 @@ export const evolutionApi = {
         },
       }
     } catch (error) {
-      console.error("Erro ao verificar status da instância:", error)
+      // console.error("Erro ao verificar status da instância:", error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -342,7 +342,7 @@ export const evolutionApi = {
         message: "Device Instance disconnected successfully",
       }
     } catch (error) {
-      console.error("Erro ao desconectar instância:", error)
+      // console.error("Erro ao desconectar instância:", error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -370,7 +370,7 @@ export const evolutionApi = {
       return await this.disconnectInstance(instanceDetails.instanceName, apiKey)
 
     } catch (error) {
-      console.error(`Erro ao desconectar dispositivo pelo número ${number}:`, error)
+      // console.error(`Erro ao desconectar dispositivo pelo número ${number}:`, error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error during disconnection by number",
@@ -390,7 +390,7 @@ export const evolutionApi = {
         message: "Device Instance deleted successfully",
       }
     } catch (error) {
-      console.error("Erro ao deletar instância:", error)
+      // console.error("Erro ao deletar instância:", error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error",
@@ -418,7 +418,7 @@ export const evolutionApi = {
       return await this.deleteInstance(instanceDetails.instanceName, apiKey)
 
     } catch (error) {
-      console.error(`Erro ao deletar dispositivo pelo número ${number}:`, error)
+      // console.error(`Erro ao deletar dispositivo pelo número ${number}:`, error)
       return {
         success: false,
         error: error instanceof Error ? error.message : "Unknown error during deletion by number",
@@ -449,7 +449,7 @@ export const evolutionApi = {
 
       return { exists: false };
     } catch (error) {
-      console.error("Erro ao obter detalhes da instância:", error);
+      // console.error("Erro ao obter detalhes da instância:", error);
       return { exists: false };
     }
   }, // <--- Vírgula adicionada
@@ -485,7 +485,7 @@ export const evolutionApi = {
 
       return { exists: false };
     } catch (error) {
-      console.error("Erro ao obter detalhes da instância pelo número:", error);
+      // console.error("Erro ao obter detalhes da instância pelo número:", error);
       return { exists: false };
     }
   } // <--- SEM vírgula aqui, pois é a última função no objeto
