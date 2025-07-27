@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
+import React from "react"
 
 export default function SettingsPage() {
   const router = useRouter();
@@ -92,6 +93,15 @@ export default function SettingsPage() {
     fetchHooks();
   };
 
+  // Montar a URL base dinâmica
+  let baseUrl = "";
+  if (typeof window !== "undefined") {
+    baseUrl = window.location.origin;
+  }
+  // Pega o primeiro id da lista de hooks, se houver
+  const firstAccountId = Object.keys(hooks)[0] || "[accountid]";
+  const webhookUrl = `${baseUrl}/api/webhook/${firstAccountId}`;
+
   return (
     <div className="container mx-auto py-8 px-4 relative">
       <button
@@ -103,7 +113,7 @@ export default function SettingsPage() {
       </button>
 
       <h1 className="text-2xl font-bold mb-6">Gowa Platform | Devices and Hooks Dashboard</h1>
-      <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <spam id="webhookUrl" name="webhookUrl">https://dsfdsfd.com.br/webhook/2323</spam></h3>
+      <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
       
       {/* CRUD HOOKS */}
       <div className="mb-8">
