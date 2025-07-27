@@ -99,8 +99,9 @@ export default function SettingsPage() {
     baseUrl = window.location.origin;
   }
   // Pega o primeiro id da lista de hooks, se houver
-  const firstAccountId = Object.keys(hooks)[0] || "[accountid]";
-  const webhookUrl = `${baseUrl}/api/webhook/${firstAccountId}`;
+  //const firstAccountId = Object.keys(hooks)[0] || "[accountid]";
+  //const webhookUrl = `${baseUrl}/api/webhook/${firstAccountId}`;
+  const webhookUrl = `${baseUrl}/api/webhook/[accountid]`;
 
   return (
     <div className="container mx-auto py-8 px-4 relative">
@@ -120,11 +121,11 @@ export default function SettingsPage() {
         <h2 className="text-xl font-semibold mb-2">Manage Webhooks</h2>
         <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
           <div>
-            <Label>ID</Label>
+            <Label>Account ID</Label>
             <Input name="id" value={form.id} onChange={handleChange} required disabled={!!editingId} />
           </div>
           <div>
-            <Label>Verify Token</Label>
+            <Label>Token API</Label>
             <Input name="verify_token" value={form.verify_token} onChange={handleChange} required />
           </div>
           <div>
