@@ -32,6 +32,9 @@ export default function LoginPage() {
         <div className="flex justify-center mb-6">
           <Image src="/tealogin.png" alt="Login" width={96} height={96} />
         </div>
+        <h2 className="text-2xl font-bold mb-4 text-center">GOWA</h2>
+        <h2 className="text-1xl mb-4 text-center">Plataforma e soluções completas para WhatsApp.</h2>
+        <h2 className="text-1xl mb-4 text-center">Devices and Hooks Dashboard</h2>
         <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
