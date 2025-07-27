@@ -135,7 +135,7 @@ export default function ManagerPage() {
         <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
           <div>
             <Label>Account ID</Label>
-            <Input name="id" value={form.id} onChange={handleChange} required disabled={!!editingId} />
+            <Input name="id" type="number" value={form.id} onChange={handleChange} required disabled={!!editingId} />
           </div>
           <div>
             <Label>Token API</Label>
