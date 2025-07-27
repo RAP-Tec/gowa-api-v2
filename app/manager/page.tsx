@@ -143,11 +143,11 @@ export default function ManagerPage() {
           </div>
           <div>
             <Label>Chat API URL</Label>
-            <Input name="chat_api_url" value={form.chat_api_url} onChange={handleChange} required />
+            <Input name="chat_api_url" value={form.chat_api_url} onChange={handleChange} />
           </div>
           <div>
             <Label>Chat API Key</Label>
-            <Input name="chat_api_key" value={form.chat_api_key} onChange={handleChange} required />
+            <Input name="chat_api_key" value={form.chat_api_key} onChange={handleChange} />
           </div>
           <div>
             <Label>Send Post URL 1</Label>
