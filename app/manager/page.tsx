@@ -26,7 +26,14 @@ export default function ManagerPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const auth = localStorage.getItem("gowa_auth");
-      if (!auth) {
+      let isValid = false;
+      if (auth) {
+        try {
+          const parsed = JSON.parse(auth);
+          isValid = parsed.user && parsed.authKey;
+        } catch {}
+      }
+      if (!isValid) {
         router.replace("/login");
       }
     }
