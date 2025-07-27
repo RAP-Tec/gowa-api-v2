@@ -20,6 +20,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const data = await fs.readFile(DATA_PATH, "utf-8");
     const json = JSON.parse(data);
+    const maxWebhooks = parseInt(process.env.MAX_WEBHOOKS || "100", 10);
+    // Se for novo registro e já atingiu o limite
+    if (!json[body.id] && Object.keys(json).length >= maxWebhooks) {
+      return NextResponse.json({ error: "Você já está usando a quantidade máxima de webhooks, entre em contato com suporte." }, { status: 400 });
+    }
     if (!body.id || typeof body.id !== "string") {
       return NextResponse.json({ error: "ID inválido" }, { status: 400 });
     }
