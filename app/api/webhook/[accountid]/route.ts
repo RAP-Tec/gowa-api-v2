@@ -41,7 +41,7 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
       {
         status: 200,
         message: "Gowa Plataforma Webhook API",
-        version: "2.3.5",
+        version: "2.3.36",
         clientName: "gowa_plataforma_api",
         accountId: params.accountid
       },
@@ -68,27 +68,27 @@ export async function POST(request: NextRequest, { params }: { params: { account
   let send_post_url_3 = "";
 
   try {
-    const data = await fs.readFile(DATA_PATH, "utf-8");
-    const json = JSON.parse(data);
+    const dataPost = await fs.readFile(DATA_PATH, "utf-8");
+    const jsonPost = JSON.parse(dataPost);
 
-    if (json[params.accountid] && json[params.accountid].chat_api_url) {
-      chat_api_url = json[params.accountid].chat_api_url || "";
+    if (jsonPost[params.accountid] && jsonPost[params.accountid].chat_api_url) {
+      chat_api_url = jsonPost[params.accountid].chat_api_url || "";
     }
 
-    if (json[params.accountid] && json[params.accountid].chat_api_key) {
-      chat_api_key = json[params.accountid].chat_api_key || "";
+    if (jsonPost[params.accountid] && jsonPost[params.accountid].chat_api_key) {
+      chat_api_key = jsonPost[params.accountid].chat_api_key || "";
     }
 
-    if (json[params.accountid] && json[params.accountid].send_post_url_1) {
-      send_post_url_1 = json[params.accountid].send_post_url_1 || "";
+    if (jsonPost[params.accountid] && jsonPost[params.accountid].send_post_url_1) {
+      send_post_url_1 = jsonPost[params.accountid].send_post_url_1 || "";
     }
 
-    if (json[params.accountid] && json[params.accountid].send_post_url_2) {
-      send_post_url_2 = json[params.accountid].send_post_url_2 || "";
+    if (jsonPost[params.accountid] && jsonPost[params.accountid].send_post_url_2) {
+      send_post_url_2 = jsonPost[params.accountid].send_post_url_2 || "";
     }
 
-    if (json[params.accountid] && json[params.accountid].send_post_url_3) {
-      send_post_url_3 = json[params.accountid].send_post_url_3 || "";
+    if (jsonPost[params.accountid] && jsonPost[params.accountid].send_post_url_3) {
+      send_post_url_3 = jsonPost[params.accountid].send_post_url_3 || "";
     }
   } catch {
     console.log(`ERRO: POST: Ao ler json do accountid: ${params.accountid}`)
