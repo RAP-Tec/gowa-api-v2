@@ -16,6 +16,7 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
 
   // Buscar verify_token do data.json conforme o accountid
   let verifyToken = "";
+
   try {
     const data = await fs.readFile(DATA_PATH, "utf-8");
     const json = JSON.parse(data);
@@ -24,8 +25,9 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
     } else {
       verifyToken = verifyTokenDefault;
     }
+
   } catch {
-    console.log(`ERRO ao ler json do accountid: ${params.accountid}`)
+    console.log(`ERRO: GET: Ao ler json do accountid: ${params.accountid}`)
   }
 
   // Verificar se os parâmetros correspondem ao esperado
@@ -34,6 +36,7 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
     return new NextResponse(challenge, { status: 200 })
   } else if (!mode) {
     // Se não for uma requisição de verificação, retornar informações da plataforma
+    console.log(`WEBHOOK GET RESPONSE 200 FOR ACCOUNT ${params.accountid}`)
     return NextResponse.json(
       {
         status: 200,
@@ -45,6 +48,7 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
       { status: 200 }
     )
   } else {
+    console.log(`WEBHOOK GET RESPONSE 403 FOR ACCOUNT ${params.accountid}`)
     return new NextResponse(null, { status: 403 })
   }
 }
@@ -52,19 +56,49 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
 // Rota para requisições POST (recebimento de eventos)
 export async function POST(request: NextRequest, { params }: { params: { accountid: string } }) {
   const timestamp = new Date().toISOString().replace('T', ' ').slice(0, 19)
-  console.log(`\n\nWebhook received for account ${params.accountid} at ${timestamp}\n`)
+  // console.log(`\n\nWebhook received for account ${params.accountid} at ${timestamp}\n`)
   
   // Obter o corpo da requisição
   const body = await request.json()
 
-  // Enviar o mesmo conteúdo para a URL dinâmica do Chatwoot
-  const CHAT_API_URL = process.env.CHAT_API_URL || "https://app.gowa.com.br/api/v1"
-  const chatSendPostUrl = `${CHAT_API_URL}/accounts/${params.accountid}/conversations`
+  let chat_api_url = "";
+  let chat_api_key = "";
+  let send_post_url_1 = "";
+  let send_post_url_2 = "";
+  let send_post_url_3 = "";
 
-  if (chatSendPostUrl) {
+    const data = await fs.readFile(DATA_PATH, "utf-8");
+    const json = JSON.parse(data);
+
+    if (json[params.accountid] && json[params.accountid].chat_api_url) {
+      chat_api_url = json[params.accountid].chat_api_url || "";
+    }
+
+    if (json[params.accountid] && json[params.accountid].chat_api_key) {
+      chat_api_key = json[params.accountid].chat_api_key || "";
+    }
+
+    if (json[params.accountid] && json[params.accountid].send_post_url_1) {
+      send_post_url_1 = json[params.accountid].send_post_url_1 || "";
+    }
+
+    if (json[params.accountid] && json[params.accountid].send_post_url_2) {
+      send_post_url_2 = json[params.accountid].send_post_url_2 || "";
+    }
+
+    if (json[params.accountid] && json[params.accountid].send_post_url_3) {
+      send_post_url_3 = json[params.accountid].send_post_url_3 || "";
+    }
+
+
+  // Enviar o mesmo conteúdo para a URL dinâmica do Chatwoot
+//  const CHAT_API_URL = process.env.CHAT_API_URL || "https://app.gowa.com.br/api/v1"
+//  const chatSendPostUrl = `${CHAT_API_URL}/accounts/${params.accountid}/conversations`
+//  if (chatSendPostUrl) {
+  if (chat_api_url) {
     try {
       // Enviar de forma assíncrona sem esperar resposta
-      fetch(chatSendPostUrl, {
+      fetch(chat_api_url, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -78,12 +112,10 @@ export async function POST(request: NextRequest, { params }: { params: { account
     }
   }
   
-  // Enviar o mesmo conteúdo para a URL definida em SEND_POST_URL (mantido para compatibilidade)
-  const sendPostUrl = process.env.SEND_POST_URL || ""
-  if (sendPostUrl) {
+  // Enviar o mesmo conteúdo para a URL definida em send_post_url_1
+  if (send_post_url_1) {
     try {
-      // Enviar de forma assíncrona sem esperar resposta
-      fetch(sendPostUrl, {
+      fetch(send_post_url_1, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -97,6 +129,40 @@ export async function POST(request: NextRequest, { params }: { params: { account
     }
   }
   
+  // Enviar o mesmo conteúdo para a URL definida em send_post_url_2
+  if (send_post_url_2) {
+    try {
+      fetch(send_post_url_2, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }).catch(() => {
+        // Ignorar erros
+      })
+    } catch {
+      // Ignorar qualquer erro
+    }
+  }
+
+  // Enviar o mesmo conteúdo para a URL definida em send_post_url_3
+  if (send_post_url_3) {
+    try {
+      fetch(send_post_url_3, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
+      }).catch(() => {
+        // Ignorar erros
+      })
+    } catch {
+      // Ignorar qualquer erro
+    }
+  }
+
   // Responder com sucesso
   return new NextResponse(null, { status: 200 })
 }
