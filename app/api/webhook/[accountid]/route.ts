@@ -1,7 +1,9 @@
-import { NextRequest, NextResponse } from "next/server"
 
-// Chave de verificação do webhook
-const verifyToken = process.env.VERIFY_TOKEN || ""
+import { NextRequest, NextResponse } from "next/server"
+import { promises as fs } from "fs"
+import path from "path"
+
+const DATA_PATH = path.join(process.cwd(), "data.json")
 
 // Rota para requisições GET (verificação do webhook)
 export async function GET(request: NextRequest, { params }: { params: { accountid: string } }) {
@@ -10,6 +12,16 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
   const mode = searchParams.get('hub.mode')
   const challenge = searchParams.get('hub.challenge')
   const token = searchParams.get('hub.verify_token')
+
+  // Buscar verify_token do data.json conforme o accountid
+  let verifyToken = "";
+  try {
+    const data = await fs.readFile(DATA_PATH, "utf-8");
+    const json = JSON.parse(data);
+    if (json[params.accountid] && json[params.accountid].verify_token) {
+      verifyToken = json[params.accountid].verify_token;
+    }
+  } catch {}
 
   // Verificar se os parâmetros correspondem ao esperado
   if (mode === 'subscribe' && token === verifyToken) {
