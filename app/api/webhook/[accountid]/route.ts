@@ -36,7 +36,7 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
     return new NextResponse(challenge, { status: 200 })
   } else if (!mode) {
     // Se não for uma requisição de verificação, retornar informações da plataforma
-    console.log(`WEBHOOK GET RESPONSE 200 FOR ACCOUNT ${params.accountid}`)
+    console.log(`WEBHOOK GET RESPONSE 200 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyToken}`)
     return NextResponse.json(
       {
         status: 200,
