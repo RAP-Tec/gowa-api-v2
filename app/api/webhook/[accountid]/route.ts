@@ -59,7 +59,12 @@ export async function POST(request: NextRequest, { params }: { params: { account
   // console.log(`\n\nWebhook received for account ${params.accountid} at ${timestamp}\n`)
   
   // Obter o corpo da requisição
-  const body = await request.json()
+  let body = {};
+  try {
+    body = await request.json();
+  } catch {
+    body = {};
+  }
 
   let chat_api_url = "";
   let chat_api_key = "";
