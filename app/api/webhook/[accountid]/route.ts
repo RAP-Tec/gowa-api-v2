@@ -67,6 +67,7 @@ export async function POST(request: NextRequest, { params }: { params: { account
   let send_post_url_2 = "";
   let send_post_url_3 = "";
 
+  try {
     const data = await fs.readFile(DATA_PATH, "utf-8");
     const json = JSON.parse(data);
 
@@ -89,6 +90,9 @@ export async function POST(request: NextRequest, { params }: { params: { account
     if (json[params.accountid] && json[params.accountid].send_post_url_3) {
       send_post_url_3 = json[params.accountid].send_post_url_3 || "";
     }
+  } catch {
+    console.log(`ERRO: POST: Ao ler json do accountid: ${params.accountid}`)
+  }
 
 
   // Enviar o mesmo conteúdo para a URL dinâmica do Chatwoot
