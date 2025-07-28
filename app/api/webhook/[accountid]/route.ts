@@ -48,7 +48,7 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
       { status: 200 }
     )
   } else {
-    console.log(`WEBHOOK GET RESPONSE 403 FOR ACCOUNT ${params.accountid}`)
+    console.log(`WEBHOOK GET RESPONSE 403 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyToken}`)
     return new NextResponse(null, { status: 403 })
   }
 }
@@ -66,6 +66,7 @@ export async function POST(request: NextRequest, { params }: { params: { account
     body = {};
   }
 
+  let verifyTokenPost = "";
   let chat_api_url = "";
   let chat_api_key = "";
   let send_post_url_1 = "";
@@ -75,6 +76,8 @@ export async function POST(request: NextRequest, { params }: { params: { account
   try {
     const dataPost = await fs.readFile(DATA_PATH, "utf-8");
     const jsonPost = JSON.parse(dataPost);
+
+    verifyTokenPost = jsonPost[params.accountid].verify_token || verifyTokenDefault;
 
     if (jsonPost[params.accountid] && jsonPost[params.accountid].chat_api_url) {
       chat_api_url = jsonPost[params.accountid].chat_api_url || "";
@@ -173,6 +176,7 @@ export async function POST(request: NextRequest, { params }: { params: { account
   }
 
   // Responder com sucesso
+  console.log(`WEBHOOK POST RESPONSE 200 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyTokenPost}`)  
   return new NextResponse(null, { status: 200 })
 }
 
