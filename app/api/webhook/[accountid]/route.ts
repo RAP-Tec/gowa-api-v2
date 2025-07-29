@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server"
 import { promises as fs } from "fs"
 import path from "path"
 
-const verifyTokenDefault = process.env.VERIFY_TOKEN || "010101010101010101010"
+const verifyTokenDefault = process.env.VERIFY_TOKEN || "default-010101010101010101010"
 const DATA_PATH = path.join(process.cwd(), "data.json")
 
 // Rota para requisições GET (verificação do webhook)
@@ -20,12 +20,16 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
   try {
     const data = await fs.readFile(DATA_PATH, "utf-8");
     const json = JSON.parse(data);
-    if (json[params.accountid] && json[params.accountid].verify_token) {
-      verifyToken = json[params.accountid].verify_token || verifyTokenDefault;
+    if (json[params.accountid]) {
+      if (json[params.accountid].verify_token) {
+        verifyToken = json[params.accountid].verify_token || verifyTokenDefault;
+      } else {
+        verifyToken = verifyTokenDefault + "-" + params.accountid;
+      }
     } else {
-      verifyToken = verifyTokenDefault;
+      console.log(`GET: Não existe o accountid: ${params.accountid}`)
     }
-
+    
   } catch {
     console.log(`ERRO: GET: Ao ler json do accountid: ${params.accountid}`)
   }
