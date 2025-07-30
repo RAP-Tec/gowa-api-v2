@@ -40,12 +40,12 @@ export async function GET(request: NextRequest, { params }: { params: { accounti
     return new NextResponse(challenge, { status: 200 })
   } else if (!mode) {
     // Se não for uma requisição de verificação, retornar informações da plataforma
-    console.log(`WEBHOOK GET RESPONSE 200 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyToken}`)
+    // console.log(`WEBHOOK GET RESPONSE 200 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyToken}`)
     return NextResponse.json(
       {
         status: 200,
         message: "Gowa Plataforma Webhook API",
-        version: "2.3.36",
+        version: "2.3.4",
         clientName: "gowa_plataforma_api",
         accountId: params.accountid
       },
@@ -103,14 +103,15 @@ export async function POST(request: NextRequest, { params }: { params: { account
       send_post_url_3 = jsonPost[params.accountid].send_post_url_3 || "";
     }
   } catch {
-    console.log(`ERRO: POST: Ao ler json do accountid: ${params.accountid}`)
+    // console.log(`ERRO: POST: Ao ler json do accountid: ${params.accountid}`)
   }
 
+  // Garante que chat_api_url termine com /api/v1
+  if (chat_api_url && !chat_api_url.endsWith('/api/v1')) {
+    chat_api_url = chat_api_url.replace(/\/+$/, '') + '/api/v1';
+  }
 
   // Enviar o mesmo conteúdo para a URL dinâmica do Chatwoot
-//  const CHAT_API_URL = process.env.CHAT_API_URL || "https://app.gowa.com.br/api/v1"
-//  const chatSendPostUrl = `${CHAT_API_URL}/accounts/${params.accountid}/conversations`
-//  if (chatSendPostUrl) {
   if (chat_api_url) {
     try {
       // Enviar de forma assíncrona sem esperar resposta
@@ -180,7 +181,7 @@ export async function POST(request: NextRequest, { params }: { params: { account
   }
 
   // Responder com sucesso
-  console.log(`WEBHOOK POST RESPONSE 200 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyTokenPost}`)  
+  // console.log(`WEBHOOK POST RESPONSE 200 FOR ACCOUNT ${params.accountid} - verifyToken: ${verifyTokenPost}`)
   return new NextResponse(null, { status: 200 })
 }
 
