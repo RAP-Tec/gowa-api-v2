@@ -488,6 +488,44 @@ export const evolutionApi = {
       // console.error("Erro ao obter detalhes da instância pelo número:", error);
       return { exists: false };
     }
+  },
+
+  // Enviar mensagem de texto
+  async sendMessage(
+    instanceName: string,
+    to: string,
+    message: string,
+    apiKey?: string
+  ): Promise<ApiResponse> {
+    try {
+      // Função auxiliar para detectar se a mensagem contém URL
+      const containsUrl = (text: string): boolean => {
+        const urlRegex = /(https?:\/\/|www\.)[^\s]+/i;
+        return urlRegex.test(text);
+      };
+
+      const payload = {
+        number: to,
+        text: message,
+        linkPreview: containsUrl(message)
+      };
+
+      const response = await fetchFromApi(`/message/sendText/${instanceName}`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }, apiKey);
+
+      return {
+        success: true,
+        message: "Message sent successfully",
+        data: response
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
   } // <--- SEM vírgula aqui, pois é a última função no objeto
 }
 
