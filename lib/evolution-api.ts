@@ -526,6 +526,101 @@ export const evolutionApi = {
         error: error instanceof Error ? error.message : "Unknown error",
       };
     }
+  },
+
+  // Enviar arquivo/mídia
+  async sendFile(
+    instanceName: string,
+    to: string,
+    message: string,
+    fileUrl: string,
+    apiKey?: string
+  ): Promise<ApiResponse> {
+    try {
+      // Função auxiliar para extrair nome do arquivo da URL
+      const getFileName = (url: string): string => {
+        try {
+          const urlObj = new URL(url);
+          const pathname = urlObj.pathname;
+          const fileName = pathname.split('/').pop() || 'file';
+          return fileName;
+        } catch {
+          return 'file';
+        }
+      };
+
+      // Função auxiliar para detectar mimetype baseado na extensão do arquivo
+      const getMimeType = (url: string): string => {
+        const fileName = getFileName(url).toLowerCase();
+        const extension = fileName.split('.').pop() || '';
+        
+        switch (extension) {
+          case 'png':
+            return 'image/png';
+          case 'jpg':
+          case 'jpeg':
+            return 'image/jpeg';
+          case 'mp4':
+            return 'video/mp4';
+          case 'pdf':
+            return 'application/pdf';
+          case 'gif':
+            return 'image/gif';
+          case 'webp':
+            return 'image/webp';
+          case 'mp3':
+            return 'audio/mpeg';
+          case 'wav':
+            return 'audio/wav';
+          case 'ogg':
+            return 'audio/ogg';
+          default:
+            return 'application/octet-stream';
+        }
+      };
+
+      // Função auxiliar para detectar mediatype baseado no mimetype
+      const getMediaType = (mimeType: string): string => {
+        if (mimeType.startsWith('image/')) {
+          return 'image';
+        } else if (mimeType.startsWith('video/')) {
+          return 'video';
+        } else if (mimeType.startsWith('audio/')) {
+          return 'audio';
+        } else {
+          return 'document';
+        }
+      };
+
+      const fileName = getFileName(fileUrl);
+      const mimeType = getMimeType(fileUrl);
+      const mediaType = getMediaType(mimeType);
+
+      const payload = {
+        number: to,
+        mediatype: mediaType,
+        mimetype: mimeType,
+        caption: message,
+        media: fileUrl,
+        fileName: fileName
+      };
+
+      const response = await fetchFromApi(`/message/sendMedia/${instanceName}`, {
+        method: "POST",
+        body: JSON.stringify(payload),
+      }, apiKey);
+
+      return {
+        success: true,
+        message: "File sent successfully",
+        data: response
+      };
+    } catch (error) {
+      return {
+        success: false,
+        error: error instanceof Error ? error.message : "Unknown error",
+      };
+    }
   } // <--- SEM vírgula aqui, pois é a última função no objeto
 }
 
