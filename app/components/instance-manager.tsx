@@ -323,14 +323,21 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
         </Alert>
       )}
 
-      {/* Card de criar instância - apenas para administradores */}
+      {/* Card de criar instância - apenas para administradores ou usuários sem API Key */}
       {(() => {
-        console.log("Comparação AuthKey:", {
+        const isAdmin = userAuthKey === gowaApiKey;
+        const hasNoApiKey = !userApiKey || userApiKey === "";
+        const shouldShow = isAdmin || hasNoApiKey;
+        
+        console.log("Verificação para criar instância:", {
           userAuthKey,
           gowaApiKey,
-          isEqual: userAuthKey === gowaApiKey
+          userApiKey,
+          isAdmin,
+          hasNoApiKey,
+          shouldShow
         });
-        return userAuthKey === gowaApiKey;
+        return shouldShow;
       })() && (
         <Card>
           <CardHeader className="pb-4">
