@@ -337,7 +337,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
           hasNoApiKey,
           shouldShow
         });
-        return shouldShow;
+        return isAdmin; // shouldShow;
       })() && (
         <Card>
           <CardHeader className="pb-4">
