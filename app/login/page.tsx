@@ -45,6 +45,7 @@ export default function LoginPage() {
               value={user}
               onChange={e => setUser(e.target.value)}
               required
+              placeholder="Informe seu usuário"
             />
           </div>
           <div className="mb-4">
@@ -64,7 +65,7 @@ export default function LoginPage() {
               className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
               value={apikey}
               onChange={e => setApikey(e.target.value)}
-              placeholder="Opcional - para filtrar instâncias"
+              required
             />
           </div>
           {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
