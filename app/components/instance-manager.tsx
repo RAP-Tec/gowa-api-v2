@@ -324,7 +324,14 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
       )}
 
       {/* Card de criar instância - apenas para administradores */}
-      {userAuthKey === gowaApiKey && (
+      {(() => {
+        console.log("Comparação AuthKey:", {
+          userAuthKey,
+          gowaApiKey,
+          isEqual: userAuthKey === gowaApiKey
+        });
+        return userAuthKey === gowaApiKey;
+      })() && (
         <Card>
           <CardHeader className="pb-4">
             <CardTitle>Criar Nova Instância</CardTitle>

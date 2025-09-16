@@ -21,6 +21,7 @@ export default function ManagerPage() {
       .then(env => {
         setHasApiKey(!!env.apiKey && env.apiKey !== "");
         setGowaApiKey(env.apiKey || "");
+        console.log("GOWA_API_KEY:", env.apiKey);
       });
       
     // Obter apikey e authKey do localStorage
@@ -31,6 +32,8 @@ export default function ManagerPage() {
           const parsed = JSON.parse(auth);
           setUserApiKey(parsed.apikey || "");
           setUserAuthKey(parsed.authKey || "");
+          console.log("User AuthKey:", parsed.authKey);
+          console.log("User ApiKey:", parsed.apikey);
         } catch {}
       }
     }
