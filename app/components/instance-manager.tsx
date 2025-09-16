@@ -322,47 +322,50 @@ export default function InstanceManager({ userApiKey, gowaApiKey }: InstanceMana
         </Alert>
       )}
 
-      <Card>
-        <CardHeader className="pb-4">
-          <CardTitle>Criar Nova Instância</CardTitle>
-          <CardDescription className="mt-1">Crie uma nova instância do WhatsApp para enviar mensagens.</CardDescription>
-        </CardHeader>
-        <form onSubmit={handleCreateInstance}>
-          <CardContent className="space-y-4">
-            <div className="space-y-2">
-              <Label htmlFor="instanceName" className="text-base">
-                Nome da Instância
-              </Label>
-              <Input id="instanceName" name="instanceName" placeholder="Ex: nome-whatsapp-cliente" className="h-11" required />
-              <p className="text-sm text-muted-foreground">Use apenas letras minúsculas, números e hífens.</p>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="number" className="text-base">
-                Número de Telefone
-              </Label>
-              <Input id="number" name="number" placeholder="Ex: 5511987654321" className="h-11" />
-              <p className="text-sm text-muted-foreground">
-                Inclua o código do país e DDD, sem espaços ou caracteres especiais. ⚠️ Números de WhatsApp com DDD superior a 30 podem não ter número 9 no início, exemplo: SP: 5511987654321 | BH: 553187654321
-              </p>
-            </div>
-          </CardContent>
-          <CardFooter>
-            <Button type="submit" disabled={creating}>
-              {creating ? (
-                <>
-                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                  Criando...
-                </>
-              ) : (
-                <>
-                  <Plus className="mr-2 h-4 w-4" />
-                  Criar Instância
-                </>
-              )}
-            </Button>
-          </CardFooter>
-        </form>
-      </Card>
+      {/* Card de criar instância - apenas para administradores */}
+      {userApiKey === gowaApiKey && (
+        <Card>
+          <CardHeader className="pb-4">
+            <CardTitle>Criar Nova Instância</CardTitle>
+            <CardDescription className="mt-1">Crie uma nova instância do WhatsApp para enviar mensagens.</CardDescription>
+          </CardHeader>
+          <form onSubmit={handleCreateInstance}>
+            <CardContent className="space-y-4">
+              <div className="space-y-2">
+                <Label htmlFor="instanceName" className="text-base">
+                  Nome da Instância
+                </Label>
+                <Input id="instanceName" name="instanceName" placeholder="Ex: nome-whatsapp-cliente" className="h-11" required />
+                <p className="text-sm text-muted-foreground">Use apenas letras minúsculas, números e hífens.</p>
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="number" className="text-base">
+                  Número de Telefone
+                </Label>
+                <Input id="number" name="number" placeholder="Ex: 5511987654321" className="h-11" />
+                <p className="text-sm text-muted-foreground">
+                  Inclua o código do país e DDD, sem espaços ou caracteres especiais. ⚠️ Números de WhatsApp com DDD superior a 30 podem não ter número 9 no início, exemplo: SP: 5511987654321 | BH: 553187654321
+                </p>
+              </div>
+            </CardContent>
+            <CardFooter>
+              <Button type="submit" disabled={creating}>
+                {creating ? (
+                  <>
+                    <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                    Criando...
+                  </>
+                ) : (
+                  <>
+                    <Plus className="mr-2 h-4 w-4" />
+                    Criar Instância
+                  </>
+                )}
+              </Button>
+            </CardFooter>
+          </form>
+        </Card>
+      )}
 
       <Card>
         <CardHeader className="pb-4">
