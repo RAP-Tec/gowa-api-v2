@@ -230,9 +230,11 @@ export default function ManagerPage() {
           </div>
         </div>
       )}
-  <div className="mb-8">
-    <hr></hr>
-  </div>
+      
+      <div className="mb-8">
+        <hr></hr>
+      </div>
+      
       {hasApiKey && <InstanceManager userApiKey={userApiKey} gowaApiKey={gowaApiKey} userAuthKey={userAuthKey} />}
     </div>
   );
