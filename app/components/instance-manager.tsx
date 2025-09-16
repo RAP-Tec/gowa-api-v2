@@ -8,7 +8,21 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Smartphone, Plus, RefreshCw, Trash2, QrCode } from "lucide-react"
-import type { Instance } from "@/lib/types"
+// Usar a interface Instance do evolution-api que tem a propriedade token
+interface Instance {
+  instanceName: string
+  instanceId?: string
+  status: "connected" | "disconnected" | "connecting"
+  number?: string
+  ownerJid?: string
+  profileName?: string
+  profilePicUrl?: string
+  token?: string
+  disconnectionReasonCode?: string
+  disconnectionObject?: any
+  disconnectionAt?: string
+  createdAt?: string
+}
 import {
   createInstance,
   deleteInstance,
@@ -22,7 +36,12 @@ import { Skeleton } from "@/components/ui/skeleton"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import Image from "next/image"
 
-export default function InstanceManager() {
+interface InstanceManagerProps {
+  userApiKey: string;
+  gowaApiKey: string;
+}
+
+export default function InstanceManager({ userApiKey, gowaApiKey }: InstanceManagerProps) {
   const [instances, setInstances] = useState<Instance[]>([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
@@ -48,11 +67,24 @@ export default function InstanceManager() {
 
       if (response.success && response.data) {
         // console.log("Instâncias carregadas com sucesso:", response.data)
+        
+        let filteredInstances = response.data;
+        
+        // Implementar lógica de filtro baseada na apikey
+        if (userApiKey && userApiKey !== gowaApiKey) {
+          // Se apikey for diferente da GOWA_API_KEY, filtrar instâncias pela apikey
+          filteredInstances = response.data.filter((instance) => {
+            // Verificar se a instância tem token/apikey que corresponde à apikey do usuário
+            return instance.token === userApiKey;
+          });
+        }
+        // Se apikey for igual à GOWA_API_KEY ou vazia, mostrar todas as instâncias
+        
         // Log connection status details for debugging
-        response.data.forEach((instance) => {
+        filteredInstances.forEach((instance) => {
           // console.log(`Instância ${instance.instanceName}: status = ${instance.status}`)
         })
-        setInstances(response.data)
+        setInstances(filteredInstances)
       } else {
         // console.error("Erro na resposta da API:", response)
         setError(response.error || "Erro desconhecido ao carregar instâncias")
@@ -82,7 +114,7 @@ export default function InstanceManager() {
         clearInterval(refreshInterval)
       }
     }
-  }, [])
+  }, [userApiKey, gowaApiKey]) // Recarregar quando as props mudarem
 
   // Criar nova instância
   const handleCreateInstance = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -272,11 +304,11 @@ export default function InstanceManager() {
   const renderStatus = (status: string) => {
     switch (status) {
       case "connected":
-        return <span className="text-green-500">✅ Conectado</span>
+        return <span className="text-green-500">Conectado ✅</span>
       case "connecting":
-        return <span className="text-yellow-500">⚠️ Conectando</span>
+        return <span className="text-yellow-500">Conectando ⚠️</span>
       default:
-        return <span className="text-red-500">🛑 Desconectado</span>
+        return <span className="text-red-500">Desconectado 🛑</span>
     }
   }
 
@@ -336,7 +368,19 @@ export default function InstanceManager() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle>Instâncias Disponíveis</CardTitle>
-              <CardDescription className="mt-1">Gerencie suas instâncias do WhatsApp.</CardDescription>
+              <CardDescription className="mt-1">
+                Gerencie suas instâncias do WhatsApp.
+                {userApiKey && userApiKey !== gowaApiKey && (
+                  <span className="block text-sm text-blue-600 mt-1">
+                    🔒 Filtro ativo: Mostrando apenas instâncias com API Key: {userApiKey.substring(0, 8)}...
+                  </span>
+                )}
+                {(!userApiKey || userApiKey === gowaApiKey) && (
+                  <span className="block text-sm text-green-600 mt-1">
+                    🌐 Modo administrador: Mostrando todas as instâncias
+                  </span>
+                )}
+              </CardDescription>
             </div>
             <Button variant="outline" size="icon" onClick={fetchInstances} disabled={loading}>
               <RefreshCw className={`h-4 w-4 ${loading ? "animate-spin" : ""}`} />
@@ -344,7 +388,7 @@ export default function InstanceManager() {
             </Button>
           </div>
         </CardHeader>
-        <CardContent>
+        <CardContent></CardContent>
           {loading ? (
             <div className="space-y-4">
               {[1, 2].map((i) => (

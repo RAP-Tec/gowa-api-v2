@@ -11,12 +11,27 @@ import React from "react"
 export default function ManagerPage() {
   // Buscar GOWA_API_KEY do ambiente (Next.js expõe apenas variáveis prefixadas com NEXT_PUBLIC_ no client)
   const [hasApiKey, setHasApiKey] = useState<boolean>(false);
+  const [gowaApiKey, setGowaApiKey] = useState<string>("");
+  const [userApiKey, setUserApiKey] = useState<string>("");
+  
   useEffect(() => {
     fetch("/api/env")
       .then(res => res.json())
       .then(env => {
         setHasApiKey(!!env.apiKey && env.apiKey !== "");
+        setGowaApiKey(env.apiKey || "");
       });
+      
+    // Obter apikey do localStorage
+    if (typeof window !== "undefined") {
+      const auth = localStorage.getItem("gowa_auth");
+      if (auth) {
+        try {
+          const parsed = JSON.parse(auth);
+          setUserApiKey(parsed.apikey || "");
+        } catch {}
+      }
+    }
   }, []);
   const router = useRouter();
   const [hooks, setHooks] = useState<any>({});
@@ -210,7 +225,7 @@ export default function ManagerPage() {
   <div className="mb-8">
     <hr></hr>
   </div>
-      {hasApiKey && <InstanceManager />}
+      {hasApiKey && <InstanceManager userApiKey={userApiKey} gowaApiKey={gowaApiKey} />}
     </div>
   );
 }

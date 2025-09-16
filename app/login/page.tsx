@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 export default function LoginPage() {
   const [user, setUser] = useState("");
   const [authKey, setAuthKey] = useState("");
+  const [apikey, setApikey] = useState("");
   const [error, setError] = useState("");
   const router = useRouter();
 
@@ -15,11 +16,11 @@ export default function LoginPage() {
     const res = await fetch("/api/login", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user, apiKey: authKey })
+      body: JSON.stringify({ user, apiKey: authKey, apikey })
     });
     const data = await res.json();
     if (data.success) {
-      localStorage.setItem("gowa_auth", JSON.stringify({ user, authKey }));
+      localStorage.setItem("gowa_auth", JSON.stringify({ user, authKey, apikey }));
       router.push("/manager");
     } else {
       setError("Invalid Login");
@@ -54,6 +55,16 @@ export default function LoginPage() {
               value={authKey}
               onChange={e => setAuthKey(e.target.value)}
               required
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 font-medium">API Key</label>
+            <input
+              type="text"
+              className="w-full px-3 py-2 border rounded focus:outline-none focus:ring"
+              value={apikey}
+              onChange={e => setApikey(e.target.value)}
+              placeholder="Opcional - para filtrar instâncias"
             />
           </div>
           {error && <div className="mb-4 text-red-500 text-center">{error}</div>}
