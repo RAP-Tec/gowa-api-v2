@@ -40,9 +40,10 @@ interface Instance {
 interface InstanceManagerProps {
   userApiKey: string;
   gowaApiKey: string;
+  userAuthKey: string;
 }
 
-export default function InstanceManager({ userApiKey, gowaApiKey }: InstanceManagerProps) {
+export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }: InstanceManagerProps) {
   const [instances, setInstances] = useState<Instance[]>([])
   const [loading, setLoading] = useState(true)
   const [creating, setCreating] = useState(false)
@@ -115,7 +116,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey }: InstanceMana
         clearInterval(refreshInterval)
       }
     }
-  }, [userApiKey, gowaApiKey]) // Recarregar quando as props mudarem
+  }, [userApiKey, gowaApiKey, userAuthKey]) // Recarregar quando as props mudarem
 
   // Criar nova instância
   const handleCreateInstance = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -323,7 +324,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey }: InstanceMana
       )}
 
       {/* Card de criar instância - apenas para administradores */}
-      {userApiKey === gowaApiKey && (
+      {userAuthKey === gowaApiKey && (
         <Card>
           <CardHeader className="pb-4">
             <CardTitle>Criar Nova Instância</CardTitle>

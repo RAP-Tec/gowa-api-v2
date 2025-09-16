@@ -13,6 +13,7 @@ export default function ManagerPage() {
   const [hasApiKey, setHasApiKey] = useState<boolean>(false);
   const [gowaApiKey, setGowaApiKey] = useState<string>("");
   const [userApiKey, setUserApiKey] = useState<string>("");
+  const [userAuthKey, setUserAuthKey] = useState<string>("");
   
   useEffect(() => {
     fetch("/api/env")
@@ -22,13 +23,14 @@ export default function ManagerPage() {
         setGowaApiKey(env.apiKey || "");
       });
       
-    // Obter apikey do localStorage
+    // Obter apikey e authKey do localStorage
     if (typeof window !== "undefined") {
       const auth = localStorage.getItem("gowa_auth");
       if (auth) {
         try {
           const parsed = JSON.parse(auth);
           setUserApiKey(parsed.apikey || "");
+          setUserAuthKey(parsed.authKey || "");
         } catch {}
       }
     }
@@ -225,7 +227,7 @@ export default function ManagerPage() {
   <div className="mb-8">
     <hr></hr>
   </div>
-      {hasApiKey && <InstanceManager userApiKey={userApiKey} gowaApiKey={gowaApiKey} />}
+      {hasApiKey && <InstanceManager userApiKey={userApiKey} gowaApiKey={gowaApiKey} userAuthKey={userAuthKey} />}
     </div>
   );
 }
