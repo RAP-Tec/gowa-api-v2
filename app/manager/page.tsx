@@ -151,8 +151,9 @@ export default function ManagerPage() {
       
       {/* CRUD HOOKS - apenas para administradores */}
       {userApiKey === gowaApiKey && (
-        <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
-        <div className="mb-8">
+        <>
+          <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
+          <div className="mb-8">
           <h2 className="text-xl font-semibold mb-2">Gerenciar Webhooks</h2>
           <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
             <div>
@@ -229,6 +230,7 @@ export default function ManagerPage() {
             </table>
           </div>
         </div>
+        </>
       )}
       
       <div className="mb-8">
