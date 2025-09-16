@@ -391,7 +391,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
                 Gerencie suas instâncias do WhatsApp.
                 {userApiKey && userApiKey !== gowaApiKey && (
                   <span className="block text-sm text-blue-600 mt-1">
-                    🔒 Filtro ativo: Mostrando apenas instâncias com API Key: {userApiKey}
+                    💠 Instância com API Key: {userApiKey}
                   </span>
                 )}
                 {(!userApiKey || userApiKey === gowaApiKey) && (
