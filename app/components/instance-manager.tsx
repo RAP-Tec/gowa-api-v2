@@ -325,7 +325,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
 
       {/* Card de criar instância - apenas para administradores ou usuários sem API Key */}
       {(() => {
-        const isAdmin = userAuthKey === gowaApiKey;
+        const isAdmin = userApiKey === gowaApiKey;
         const hasNoApiKey = !userApiKey || userApiKey === "";
         const shouldShow = isAdmin || hasNoApiKey;
         
@@ -337,7 +337,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
           hasNoApiKey,
           shouldShow
         });
-        return isAdmin; // shouldShow;
+        return isAdmin;
       })() && (
         <Card>
           <CardHeader className="pb-4">
