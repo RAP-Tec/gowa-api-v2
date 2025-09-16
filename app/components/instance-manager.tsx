@@ -8,6 +8,19 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Smartphone, Plus, RefreshCw, Trash2, QrCode } from "lucide-react"
+import {
+  createInstance,
+  deleteInstance,
+  disconnectInstance,
+  getInstanceQrCode,
+  listInstances,
+} from "@/app/actions/instance-actions"
+import { useToast } from "@/hooks/use-toast"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+import { Skeleton } from "@/components/ui/skeleton"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+import Image from "next/image"
+
 // Usar a interface Instance do evolution-api que tem a propriedade token
 interface Instance {
   instanceName: string
@@ -23,18 +36,6 @@ interface Instance {
   disconnectionAt?: string
   createdAt?: string
 }
-import {
-  createInstance,
-  deleteInstance,
-  disconnectInstance,
-  getInstanceQrCode,
-  listInstances,
-} from "@/app/actions/instance-actions"
-import { useToast } from "@/hooks/use-toast"
-import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import { Skeleton } from "@/components/ui/skeleton"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
-import Image from "next/image"
 
 interface InstanceManagerProps {
   userApiKey: string;
@@ -388,7 +389,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey }: InstanceMana
             </Button>
           </div>
         </CardHeader>
-        <CardContent></CardContent>
+        <CardContent>
           {loading ? (
             <div className="space-y-4">
               {[1, 2].map((i) => (
