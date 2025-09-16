@@ -272,11 +272,11 @@ export default function InstanceManager() {
   const renderStatus = (status: string) => {
     switch (status) {
       case "connected":
-        return <span className="text-green-500">Conectado</span>
+        return <span className="text-green-500">✅ Conectado</span>
       case "connecting":
-        return <span className="text-yellow-500">Conectando</span>
+        return <span className="text-yellow-500">⚠️ Conectando</span>
       default:
-        return <span className="text-gray-500">Desconectado</span>
+        return <span className="text-red-500">🛑 Desconectado</span>
     }
   }
 
@@ -381,6 +381,7 @@ export default function InstanceManager() {
                           <p className="font-medium"><span className="text-muted-foreground text-sm">Número:</span> {instance.number}</p>
                         )}
                       </div>
+                      <p className="text-sm text-muted-foreground">Profile Name: {instance.profileName}</p>
                       <p className="text-sm text-muted-foreground">Status: {renderStatus(instance.status)}</p>
                     </div>
                   </div>
