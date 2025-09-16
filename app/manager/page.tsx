@@ -148,85 +148,88 @@ export default function ManagerPage() {
       </button>
 
       <h1 className="text-2xl font-bold mb-6">Gowa Platform | Hooks and Devices Dashboard</h1>
-      <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
-      {/* CRUD HOOKS */}
-      <div className="mb-8">
-        <h2 className="text-xl font-semibold mb-2">Gerenciar Webhooks</h2>
-        <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
-          <div>
-            <Label>Account ID</Label>
-            <Input name="id" type="number" value={form.id} onChange={handleChange} required disabled={!!editingId} />
-          </div>
-          <div>
-            <Label>Token API</Label>
-            <Input name="verify_token" value={form.verify_token} onChange={handleChange} required />
-          </div>
-          <div>
-            <Label>Chat API URL</Label>
-            <Input name="chat_api_url" type="url" value={form.chat_api_url} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Chat API Key</Label>
-            <Input name="chat_api_key" value={form.chat_api_key} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Send Post URL 1</Label>
-            <Input name="send_post_url_1" type="url" value={form.send_post_url_1} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Send Post URL 2</Label>
-            <Input name="send_post_url_2" type="url" value={form.send_post_url_2} onChange={handleChange} />
-          </div>
-          <div>
-            <Label>Send Post URL 3</Label>
-            <Input name="send_post_url_3" type="url" value={form.send_post_url_3} onChange={handleChange} />
-          </div>
-          <div className="flex items-end">
-            <Button type="submit" className="w-full">{editingId ? "Salvar" : "Adicionar"}</Button>
-          </div>
-        </form>
-        <div className="overflow-x-auto">
-          <table className="min-w-full border text-sm">
-            <thead>
-              <tr className="bg-gray-100 dark:bg-zinc-800">
-                <th className="border px-2 py-1">Account ID</th>
-                <th className="border px-2 py-1">Token API</th>
-                <th className="border px-2 py-1">Chat API URL</th>
-                <th className="border px-2 py-1">Chat API Key</th>
-                <th className="border px-2 py-1">Send Post URL 1</th>
-                <th className="border px-2 py-1">Send Post URL 2</th>
-                <th className="border px-2 py-1">Send Post URL 3</th>
-                <th className="border px-2 py-1">Ações</th>
-              </tr>
-            </thead>
-            <tbody>
-              {loading ? (
-                <tr><td colSpan={8} className="text-center p-2">Carregando...</td></tr>
-              ) : (
-                Object.keys(hooks).length === 0 ? (
-                  <tr><td colSpan={8} className="text-center p-2">Nenhum registro</td></tr>
+      
+      {/* CRUD HOOKS - apenas para administradores */}
+      {userApiKey === gowaApiKey && (
+        <h3 className="text-1xl mb-6">Sua Webhook URL para API Oficial: <span id="webhookUrl" name="webhookUrl">{webhookUrl}</span></h3>
+        <div className="mb-8">
+          <h2 className="text-xl font-semibold mb-2">Gerenciar Webhooks</h2>
+          <form onSubmit={handleSubmit} className="mb-4 grid grid-cols-1 md:grid-cols-4 gap-2">
+            <div>
+              <Label>Account ID</Label>
+              <Input name="id" type="number" value={form.id} onChange={handleChange} required disabled={!!editingId} />
+            </div>
+            <div>
+              <Label>Token API</Label>
+              <Input name="verify_token" value={form.verify_token} onChange={handleChange} required />
+            </div>
+            <div>
+              <Label>Chat API URL</Label>
+              <Input name="chat_api_url" type="url" value={form.chat_api_url} onChange={handleChange} />
+            </div>
+            <div>
+              <Label>Chat API Key</Label>
+              <Input name="chat_api_key" value={form.chat_api_key} onChange={handleChange} />
+            </div>
+            <div>
+              <Label>Send Post URL 1</Label>
+              <Input name="send_post_url_1" type="url" value={form.send_post_url_1} onChange={handleChange} />
+            </div>
+            <div>
+              <Label>Send Post URL 2</Label>
+              <Input name="send_post_url_2" type="url" value={form.send_post_url_2} onChange={handleChange} />
+            </div>
+            <div>
+              <Label>Send Post URL 3</Label>
+              <Input name="send_post_url_3" type="url" value={form.send_post_url_3} onChange={handleChange} />
+            </div>
+            <div className="flex items-end">
+              <Button type="submit" className="w-full">{editingId ? "Salvar" : "Adicionar"}</Button>
+            </div>
+          </form>
+          <div className="overflow-x-auto">
+            <table className="min-w-full border text-sm">
+              <thead>
+                <tr className="bg-gray-100 dark:bg-zinc-800">
+                  <th className="border px-2 py-1">Account ID</th>
+                  <th className="border px-2 py-1">Token API</th>
+                  <th className="border px-2 py-1">Chat API URL</th>
+                  <th className="border px-2 py-1">Chat API Key</th>
+                  <th className="border px-2 py-1">Send Post URL 1</th>
+                  <th className="border px-2 py-1">Send Post URL 2</th>
+                  <th className="border px-2 py-1">Send Post URL 3</th>
+                  <th className="border px-2 py-1">Ações</th>
+                </tr>
+              </thead>
+              <tbody>
+                {loading ? (
+                  <tr><td colSpan={8} className="text-center p-2">Carregando...</td></tr>
                 ) : (
-                  Object.entries(hooks).map(([id, hook]: any) => (
-                    <tr key={id} className="border-b">
-                      <td className="border px-2 py-1 font-mono">{id}</td>
-                      <td className="border px-2 py-1">{hook.verify_token}</td>
-                      <td className="border px-2 py-1">{hook.chat_api_url}</td>
-                      <td className="border px-2 py-1">{hook.chat_api_key}</td>
-                      <td className="border px-2 py-1">{hook.send_post_url_1}</td>
-                      <td className="border px-2 py-1">{hook.send_post_url_2}</td>
-                      <td className="border px-2 py-1">{hook.send_post_url_3}</td>
-                      <td className="border px-2 py-1 flex gap-2">
-                        <Button type="button" size="sm" onClick={() => handleEdit(id)}>Editar</Button>
-                        <Button type="button" size="sm" variant="destructive" onClick={() => handleDelete(id)}>Excluir</Button>
-                      </td>
-                    </tr>
-                  ))
-                )
-              )}
-            </tbody>
-          </table>
+                  Object.keys(hooks).length === 0 ? (
+                    <tr><td colSpan={8} className="text-center p-2">Nenhum registro</td></tr>
+                  ) : (
+                    Object.entries(hooks).map(([id, hook]: any) => (
+                      <tr key={id} className="border-b">
+                        <td className="border px-2 py-1 font-mono">{id}</td>
+                        <td className="border px-2 py-1">{hook.verify_token}</td>
+                        <td className="border px-2 py-1">{hook.chat_api_url}</td>
+                        <td className="border px-2 py-1">{hook.chat_api_key}</td>
+                        <td className="border px-2 py-1">{hook.send_post_url_1}</td>
+                        <td className="border px-2 py-1">{hook.send_post_url_2}</td>
+                        <td className="border px-2 py-1">{hook.send_post_url_3}</td>
+                        <td className="border px-2 py-1 flex gap-2">
+                          <Button type="button" size="sm" onClick={() => handleEdit(id)}>Editar</Button>
+                          <Button type="button" size="sm" variant="destructive" onClick={() => handleDelete(id)}>Excluir</Button>
+                        </td>
+                      </tr>
+                    ))
+                  )
+                )}
+              </tbody>
+            </table>
+          </div>
         </div>
-      </div>
+      )}
   <div className="mb-8">
     <hr></hr>
   </div>
