@@ -58,7 +58,7 @@
     font-family: 'Nunito', Arial, sans-serif !important;
     background: #9db6cf;
     background-color: #9db6cf;
-    background-image: linear-gradient(180deg, rgba(32, 44, 51, 1) 10%, #080a0ab3 74%, rgb(17 27 33 / 50%) 100%);
+   /* AQUI REM background-image: linear-gradient(180deg, rgba(32, 44, 51, 1) 10%, #080a0ab3 74%, rgb(17 27 33 / 50%) 100%); */
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.06), inset 0 4px 25px 2px rgba(0, 0, 0, 0.09);
     @apply bg-background text-foreground;
   }
