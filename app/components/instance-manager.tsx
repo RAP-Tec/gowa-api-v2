@@ -395,7 +395,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
                   </span>
                 )}
                 {(!userApiKey || userApiKey === gowaApiKey) && (
-                  <span className="block text-sm text-green-600 mt-1">
+                  <span className="block text-sm text-blue-600 mt-1">
                     🌐 Modo administrador: Mostrando todas as instâncias
                   </span>
                 )}
