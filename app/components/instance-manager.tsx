@@ -444,7 +444,7 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
                           <p className="font-medium"><span className="text-muted-foreground text-sm">Número:</span> {instance.number}</p>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground">API Key: {instance.token || "—"}</p>
+                      <p className="text-sm text-muted-foreground">API Key: {instance.token || "API Key não disponível"}</p>
                       <p className="text-sm text-muted-foreground">Profile Name: {instance.profileName}</p>
                       <p className="text-sm text-muted-foreground">Status: {renderStatus(instance.status)}</p>
                     </div>
