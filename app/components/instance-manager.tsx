@@ -7,7 +7,9 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Smartphone, Plus, RefreshCw, Trash2, QrCode } from "lucide-react"
+import { Switch } from "@/components/ui/switch"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Smartphone, Plus, RefreshCw, Trash2, QrCode, Settings } from "lucide-react"
 import {
   createInstance,
   deleteInstance,
@@ -55,6 +57,15 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
   const [deleting, setDeleting] = useState<string | null>(null)
   const [qrDialogOpen, setQrDialogOpen] = useState(false)
   const [refreshInterval, setRefreshInterval] = useState<NodeJS.Timeout | null>(null)
+  const [proxySettings, setProxySettings] = useState<Record<string, {
+    enabled: boolean
+    host: string
+    port: number
+    protocol: string
+    username: string
+    password: string
+  }>>({})
+  const [updatingProxy, setUpdatingProxy] = useState<string | null>(null)
 
   const { toast } = useToast()
 
@@ -249,6 +260,83 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
     }
   }
 
+  // Atualizar proxy
+  const handleUpdateProxy = async (instanceName: string) => {
+    const proxyData = proxySettings[instanceName]
+    
+    if (!proxyData) {
+      toast({
+        title: "Erro",
+        description: "Dados do proxy não encontrados",
+        variant: "destructive",
+      })
+      return
+    }
+
+    setUpdatingProxy(instanceName)
+    
+    try {
+      const response = await fetch(`/api/proxy/set/${instanceName}`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(proxyData),
+      })
+
+      const result = await response.json()
+
+      if (result.success) {
+        toast({
+          title: "Proxy atualizado",
+          description: "As configurações de proxy foram atualizadas com sucesso",
+        })
+      } else {
+        toast({
+          title: "Erro",
+          description: result.error || "Erro ao atualizar proxy",
+          variant: "destructive",
+        })
+      }
+    } catch (err) {
+      toast({
+        title: "Erro",
+        description: "Erro ao conectar com o servidor",
+        variant: "destructive",
+      })
+    } finally {
+      setUpdatingProxy(null)
+    }
+  }
+
+  // Atualizar configurações de proxy
+  const updateProxySetting = (instanceName: string, field: string, value: any) => {
+    setProxySettings((prev: Record<string, any>) => ({
+      ...prev,
+      [instanceName]: {
+        ...prev[instanceName],
+        [field]: value,
+      }
+    }))
+  }
+
+  // Inicializar configurações de proxy para uma instância
+  const initializeProxySettings = (instanceName: string) => {
+    if (!proxySettings[instanceName]) {
+      setProxySettings((prev: Record<string, any>) => ({
+        ...prev,
+        [instanceName]: {
+          enabled: false,
+          host: "",
+          port: 8080,
+          protocol: "http",
+          username: "",
+          password: "",
+        }
+      }))
+    }
+  }
+
   // Deletar instância
   const handleDelete = async (instance: Instance) => {
     // Usar instanceName como fallback se instanceId não estiver disponível
@@ -432,64 +520,194 @@ export default function InstanceManager({ userApiKey, gowaApiKey, userAuthKey }:
               <p className="text-sm mt-1">Crie uma nova instância para começar.</p>
             </div>
           ) : (
-            <div className="space-y-4">
-              {instances.map((instance) => (
-                <div key={instance.instanceName} className="flex items-center justify-between p-4 border rounded-lg">
-                  <div className="flex items-center gap-4">
-                    <Smartphone className="h-10 w-10 text-muted-foreground" />
-                    <div>
-                      <div className="flex flex-wrap gap-x-4 mb-1">
-                        <p className="font-medium"><span className="text-muted-foreground text-sm">Nome:</span> {instance.instanceName}</p>
-                        {instance.number && (
-                          <p className="font-medium"><span className="text-muted-foreground text-sm">Número:</span> {instance.number}</p>
-                        )}
+            <div className="space-y-6">
+              {instances.map((instance: Instance) => {
+                // Inicializar configurações de proxy para esta instância
+                initializeProxySettings(instance.instanceName)
+                const proxyData = proxySettings[instance.instanceName] || {
+                  enabled: false,
+                  host: "",
+                  port: 8080,
+                  protocol: "http",
+                  username: "",
+                  password: "",
+                }
+
+                return (
+                  <Card key={instance.instanceName}>
+                    <CardContent className="p-4">
+                      <div className="flex items-center justify-between mb-4">
+                        <div className="flex items-center gap-4">
+                          <Smartphone className="h-10 w-10 text-muted-foreground" />
+                          <div>
+                            <div className="flex flex-wrap gap-x-4 mb-1">
+                              <p className="font-medium"><span className="text-muted-foreground text-sm">Nome:</span> {instance.instanceName}</p>
+                              {instance.number && (
+                                <p className="font-medium"><span className="text-muted-foreground text-sm">Número:</span> {instance.number}</p>
+                              )}
+                            </div>
+                            <p className="text-sm text-muted-foreground">API Key: {instance.token || "API Key não disponível"}</p>
+                            <p className="text-sm text-muted-foreground">Profile Name: {instance.profileName}</p>
+                            <p className="text-sm text-muted-foreground">Status: {renderStatus(instance.status)}</p>
+                          </div>
+                        </div>
+                        <div className="flex gap-2">
+                          {instance.status === "connected" ? (
+                            <Button variant="outline" onClick={() => handleDisconnect(instance.instanceName)}>
+                              Desconectar
+                            </Button>
+                          ) : (
+                            <Button
+                              variant="outline"
+                              onClick={() => handleGenerateQrCode(instance.instanceName)}
+                              disabled={loadingQr && selectedInstance === instance.instanceName}
+                            >
+                              {loadingQr && selectedInstance === instance.instanceName ? (
+                                <>
+                                  <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                  Gerando...
+                                </>
+                              ) : (
+                                <>
+                                  <QrCode className="mr-2 h-4 w-4" />
+                                  Gerar QR Code   ℹ️ Pairing Code
+                                </>
+                              )}
+                            </Button>
+                          )}
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => handleDelete(instance)}
+                            disabled={deleting === instance.instanceName}
+                          >
+                            {deleting === instance.instanceName ? (
+                              <RefreshCw className="h-4 w-4 animate-spin" />
+                            ) : (
+                              <Trash2 className="h-4 w-4" />
+                            )}
+                            <span className="sr-only">Deletar</span>
+                          </Button>
+                        </div>
                       </div>
-                      <p className="text-sm text-muted-foreground">API Key: {instance.token || "API Key não disponível"}</p>
-                      <p className="text-sm text-muted-foreground">Profile Name: {instance.profileName}</p>
-                      <p className="text-sm text-muted-foreground">Status: {renderStatus(instance.status)}</p>
-                    </div>
-                  </div>
-                  <div className="flex gap-2">
-                    {instance.status === "connected" ? (
-                      <Button variant="outline" onClick={() => handleDisconnect(instance.instanceName)}>
-                        Desconectar
-                      </Button>
-                    ) : (
-                      <Button
-                        variant="outline"
-                        onClick={() => handleGenerateQrCode(instance.instanceName)}
-                        disabled={loadingQr && selectedInstance === instance.instanceName}
-                      >
-                        {loadingQr && selectedInstance === instance.instanceName ? (
-                          <>
-                            <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
-                            Gerando...
-                          </>
-                        ) : (
-                          <>
-                            <QrCode className="mr-2 h-4 w-4" />
-                            Gerar QR Code   ℹ️ Pairing Code
-                          </>
-                        )}
-                      </Button>
-                    )}
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="text-destructive hover:text-destructive"
-                      onClick={() => handleDelete(instance)}
-                      disabled={deleting === instance.instanceName}
-                    >
-                      {deleting === instance.instanceName ? (
-                        <RefreshCw className="h-4 w-4 animate-spin" />
-                      ) : (
-                        <Trash2 className="h-4 w-4" />
-                      )}
-                      <span className="sr-only">Deletar</span>
-                    </Button>
-                  </div>
-                </div>
-              ))}
+
+                      {/* Seção de Configurações de Proxy */}
+                      <div className="border-t pt-4">
+                        <div className="flex items-center gap-2 mb-4">
+                          <Settings className="h-4 w-4 text-muted-foreground" />
+                          <h3 className="font-medium">Configurações de Proxy</h3>
+                        </div>
+                        
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                          {/* Habilitar Proxy */}
+                          <div className="flex items-center space-x-2">
+                            <Switch
+                              id={`proxy-enabled-${instance.instanceName}`}
+                              checked={proxyData.enabled}
+                              onCheckedChange={(checked: boolean) => updateProxySetting(instance.instanceName, "enabled", checked)}
+                            />
+                            <Label htmlFor={`proxy-enabled-${instance.instanceName}`}>
+                              Habilitar Proxy
+                            </Label>
+                          </div>
+
+                          {/* Host */}
+                          <div className="space-y-2">
+                            <Label htmlFor={`proxy-host-${instance.instanceName}`}>Host</Label>
+                            <Input
+                              id={`proxy-host-${instance.instanceName}`}
+                              placeholder="0.0.0.0"
+                              value={proxyData.host}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateProxySetting(instance.instanceName, "host", e.target.value)}
+                              disabled={!proxyData.enabled}
+                            />
+                          </div>
+
+                          {/* Porta */}
+                          <div className="space-y-2">
+                            <Label htmlFor={`proxy-port-${instance.instanceName}`}>Porta</Label>
+                            <Input
+                              id={`proxy-port-${instance.instanceName}`}
+                              type="number"
+                              placeholder="8080"
+                              value={proxyData.port}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateProxySetting(instance.instanceName, "port", parseInt(e.target.value) || 8080)}
+                              disabled={!proxyData.enabled}
+                            />
+                          </div>
+
+                          {/* Protocolo */}
+                          <div className="space-y-2">
+                            <Label htmlFor={`proxy-protocol-${instance.instanceName}`}>Protocolo</Label>
+                            <Select
+                              value={proxyData.protocol}
+                              onValueChange={(value: string) => updateProxySetting(instance.instanceName, "protocol", value)}
+                              disabled={!proxyData.enabled}
+                            >
+                              <SelectTrigger>
+                                <SelectValue placeholder="Selecione o protocolo" />
+                              </SelectTrigger>
+                              <SelectContent>
+                                <SelectItem value="http">HTTP</SelectItem>
+                                <SelectItem value="https">HTTPS</SelectItem>
+                                <SelectItem value="socks4">SOCKS4</SelectItem>
+                                <SelectItem value="socks5">SOCKS5</SelectItem>
+                              </SelectContent>
+                            </Select>
+                          </div>
+
+                          {/* Username */}
+                          <div className="space-y-2">
+                            <Label htmlFor={`proxy-username-${instance.instanceName}`}>Username</Label>
+                            <Input
+                              id={`proxy-username-${instance.instanceName}`}
+                              placeholder="usuário"
+                              value={proxyData.username}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateProxySetting(instance.instanceName, "username", e.target.value)}
+                              disabled={!proxyData.enabled}
+                            />
+                          </div>
+
+                          {/* Password */}
+                          <div className="space-y-2">
+                            <Label htmlFor={`proxy-password-${instance.instanceName}`}>Password</Label>
+                            <Input
+                              id={`proxy-password-${instance.instanceName}`}
+                              type="password"
+                              placeholder="senha"
+                              value={proxyData.password}
+                              onChange={(e: React.ChangeEvent<HTMLInputElement>) => updateProxySetting(instance.instanceName, "password", e.target.value)}
+                              disabled={!proxyData.enabled}
+                            />
+                          </div>
+                        </div>
+
+                        {/* Botão para atualizar proxy */}
+                        <div className="flex justify-end mt-4">
+                          <Button
+                            onClick={() => handleUpdateProxy(instance.instanceName)}
+                            disabled={updatingProxy === instance.instanceName}
+                            size="sm"
+                          >
+                            {updatingProxy === instance.instanceName ? (
+                              <>
+                                <RefreshCw className="mr-2 h-4 w-4 animate-spin" />
+                                Atualizando...
+                              </>
+                            ) : (
+                              <>
+                                <Settings className="mr-2 h-4 w-4" />
+                                Atualizar Proxy
+                              </>
+                            )}
+                          </Button>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )
+              })}
             </div>
           )}
         </CardContent>
