@@ -52,8 +52,8 @@ export async function POST(
     }
 
     // Fazer requisição para a Evolution API
-    const evolutionApiUrl = process.env.EVOLUTION_API_URL || "http://localhost:8080"
-    const evolutionApiKey = process.env.EVOLUTION_API_KEY || ""
+    const evolutionApiUrl = process.env.GOWA_API_URL || "http://localhost:8080"
+    const evolutionApiKey = process.env.GOWA_API_KEY || ""
 
     const response = await fetch(`${evolutionApiUrl}/proxy/set/${instanceName}`, {
       method: "POST",
